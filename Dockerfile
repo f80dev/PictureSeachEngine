@@ -17,6 +17,8 @@ RUN apk --update add python
 RUN pip3 install --upgrade pip
 
 RUN pip3 -v install Flask
+RUN pip3 -v install flask-restplus
+RUN pip3 -v install Flask-JWT
 RUN pip3 -v install Flask-Cors
 RUN pip3 -v install requests
 RUN apk add py3-openssl
