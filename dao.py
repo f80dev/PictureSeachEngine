@@ -12,7 +12,7 @@ def create_database(domain:str,port:str="27017",username="admin",password="admin
     return pymongo.MongoClient(url_base)[dbname]
 
 
-db_settings=tools.settings["database"]
+db_settings=tools.settings()["database"]
 db:pymongo.mongo_client=create_database(
     db_settings["server"],
     db_settings["port"],

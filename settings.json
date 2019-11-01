@@ -11,5 +11,13 @@
                   "username":"mydemo",
                   "password":"mydemo"
                 }
-  ]
+  ],
+
+  "souces": {
+    "pixabay": {
+      "key":"5489947-2039fe3621c0de1cbb91d08c6",
+      "endpoint": "https://pixabay.com/api/"
+    }
+  }
+
 }
