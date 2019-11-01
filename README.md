@@ -17,3 +17,7 @@ Le front-end est
 
 # Démonstration
 Le front-end est accessible directement à l'adresse https://pse.f80.fr
+
+# Références
+De nombreux articles traitent des différentes briques impliquées dans le Picture Search Engine:
+- 
