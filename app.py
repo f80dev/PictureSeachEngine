@@ -73,6 +73,10 @@ if __name__ == '__main__':
     if "debug" in sys.argv:
         app.run(host="0.0.0.0",port=_port,debug=True)
     else:
+        #Le serveur peut être déployé en mode non sécurisé
+        #cela dit la plus part des front-end ne peuvent être hébergés quand mode https
+        #ils ne peuvent donc appeler que des serveurs en https. Il est donc préférable
+        #de déployer l'API sur un serveur sécurisé
         if "ssl" in sys.argv:
             print("Activation du ssl")
             context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
