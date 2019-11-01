@@ -47,12 +47,22 @@ def identity(payload):
 jwt = JWT(app, authenticate, identity)
 
 @api.route('/images/<string:query>')
+@api.doc(params={'query': "Requête pour intérroger les bases de données d'image"})
 class Image(Resource):
     @jwt_required()
+    @api.doc(responses={
+        200: 'Liste des urls des photos correspondant à la requête',
+        404: 'Aucune image disponible par rapport à la requête'
+    })
+    @api.expect(parser)
     def get(self,query):
         args = parser.parse_args(strict=True)
         rc=tools.queryPixabay(query,args["limit"],args["quality"])
         return jsonify(rc)
+
+    @api.doc(responses={403: 'Not Authorized'})
+    def post(self, query):
+        api.abort(403)
 
 
 if __name__ == '__main__':

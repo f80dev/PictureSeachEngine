@@ -1,0 +1,10 @@
+{
+  "database": "server.f80.fr",
+  "api_users": [
+                {
+                  "username":"mydemo",
+                  "password":"mydemo"
+                }
+  ]
+
+}
