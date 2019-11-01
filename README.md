@@ -33,7 +33,6 @@ L'installation de docker dépend de l'OS mais dans beaucoup de cas, il suffit d'
 sudo curl -sSL get.docker.com | sh
 </pre>
 
-
 # La base de données
 La base de données est utilsée comme cache pour stocker les réponses aux requêtes. 
 On aurait pu utiliser des techniques plus légère ou des bases de données plus simple
@@ -47,11 +46,12 @@ docker run --restart=always -v /root/mongodata:/data/db -d -p 27017:27017 --name
 </pre>
 On aurait pû utiliser
 - un autre port que le port standard : 27017 
-- un autre user / mot de passe que admin / admin_password
+- un autre couple (user / mot de passe) que (admin / admin_password)
 
 # Références
 De nombreux articles traitent des différentes briques 
 impliquées dans le Picture Search Engine:
 - La documentation de l'extension Flask-JWT : https://pythonhosted.org/Flask-JWT/
 - La documentation de l'extension Flask-restplus : https://flask-restplus.readthedocs.io/en/stable/
+- L'installation de MongoDB : https://www.thepolyglotdeveloper.com/2019/01/getting-started-mongodb-docker-container-deployment/
  

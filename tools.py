@@ -2,6 +2,9 @@ import urllib
 
 from flask import json
 
+def settings():
+    with open('settings.json') as json_file:
+        return json.load(json_file)
 
 def queryPixabay(query:str,limit:int=20,quality:bool=False):
     pixabay_key = "5489947-2039fe3621c0de1cbb91d08c6"

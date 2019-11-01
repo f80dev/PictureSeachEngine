@@ -1,10 +1,15 @@
 {
-  "database": "server.f80.fr",
+  "database": {
+    "server":"server.f80.fr",
+    "port": "27017",
+    "username": "admin",
+    "password": "admin_password"
+  },
+
   "api_users": [
                 {
                   "username":"mydemo",
                   "password":"mydemo"
                 }
   ]
-
 }

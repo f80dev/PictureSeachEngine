@@ -18,6 +18,7 @@ RUN apk --update add python
 RUN pip3 install --upgrade pip
 
 #Installation des librairies complémentaires
+RUN pip3 -v install pymongo
 RUN pip3 -v install Flask
 RUN pip3 -v install flask-restplus
 RUN pip3 -v install Flask-JWT

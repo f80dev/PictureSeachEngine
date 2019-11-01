@@ -6,6 +6,7 @@ from flask_restplus import Resource, Api,reqparse
 from flask_cors import CORS
 from werkzeug.security import safe_str_cmp
 
+import dao
 import user
 import tools
 
@@ -56,13 +57,15 @@ class Image(Resource):
     })
     @api.expect(parser)
     def get(self,query):
-        args = parser.parse_args(strict=True)
-        rc=tools.queryPixabay(query,args["limit"],args["quality"])
+        args = parser.parse_args() #va nous permettre de parser automatiquement les paramètres
+        key=query+str(args["limit"])+str(args["quality"])
+        rc=dao.read_query(key)
+        if rc is None:
+            rc=tools.queryPixabay(query,args["limit"],args["quality"])
+            dao.save_query(key,rc)
+
         return jsonify(rc)
 
-    @api.doc(responses={403: 'Not Authorized'})
-    def post(self, query):
-        api.abort(403)
 
 
 if __name__ == '__main__':
