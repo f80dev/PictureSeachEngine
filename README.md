@@ -1,4 +1,4 @@
-# PictureSeachEngine
+# Picture Seach Engine
 Moteur de recherche d'images
 
 # Objectif
