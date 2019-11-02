@@ -24,28 +24,40 @@ La documentation de l'API générée par l'extension RestPlus se trouve ici :
 # Le code
 Le code est abondamment commenté. 
 
+
 # Sécurisation du serveur
 Dans cet exemple on va utilise des certificats Let's Encrypt.
 
 tout d'abord vous devez paramétrer le DNS de votre domaine pour le faire pointer vers
 votre serveur. La procédure dépend de votre fournisseur de nom de domaine. Par exemple, chez
-1 and 1 elle est expliquée ici. Puis, sur le serveur, on récupère certbot qui automatise la procédure
+1 and 1 elle est expliquée ici. 
+Puis, sur le serveur, on récupère certbot qui automatise la procédure
 d'installation des certificats.
 
 `apt-get -t jessie-backports install certbot`
 
-puis on execute la commande :
+l'installation des certificats s'obtient ainsi :
 
 `certbot certonly --standalone -d sub.domaine.com` 
 en remplacant sub.domain.com par votre domaine
 
-# Configuration du serveur
-Dans le projet on utilise un serveur Linux pour héberger nos images Docker, et l'on se place dans une configuration root
+pour établir une connexion sécurisée Flask utilise deux fichiers :
+fullchain.pem et privkey.pem produit par certbot. On les places
+dans le repertoire /root/certs qui est visible depuis l'image docker
+du serveur par la commande 
+
+`mkdir /root/certs && cp /etc/letsencrypt/live/sub.domain.com/* /root/certs`
+
+
+# Installation de docker
+Dans le projet on utilise un serveur Linux 
+pour héberger nos images Docker, et l'on se place dans une configuration root
 (ce qui n'est clairement pas conseillé en environnement de production)
 
-L'installation de docker dépend de l'OS mais dans beaucoup de cas, il suffit d'exécuter :
+L'installation de docker dépend de l'OS mais dans beaucoup de cas, 
+il suffit d'exécuter :
 
-`sudo curl -sSL get.docker.com | sh`
+`sudo curl -sSL get.docker.com | sh && systemctl enable docker && systemctl start docker`
 
 
 # La base de données
@@ -58,12 +70,15 @@ que MongoDB mais l'objectif est d'illustrer l'usage d'une base moderne
 
 Via docker, on peut avoir une installation de la base particulierement simple à mettre en
 oeuvre :
-<pre>
-docker run --restart=always -v /root/mongodata:/data/db -d -p 27017:27017 --name mongodb -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=admin_password mongo
-</pre>
+
+`docker run --restart=always -v /root/mongodata:/data/db -d -p 27017:27017 --name mongodb -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=admin_password mongo`
+
 On aurait pû utiliser
 - un autre port que le port standard : 27017 
 - un autre couple (user / mot de passe) que (admin / admin_password)
+
+# Installation du serveur
+
 
 # Références
 De nombreux articles traitent des différentes briques 
