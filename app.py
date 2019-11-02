@@ -13,33 +13,32 @@ import tools
 from flask import Flask, jsonify
 
 app = Flask(__name__)
-api = Api(app)
 CORS(app)
 app.config['SECRET_KEY'] = 'hh4280!!'
+app.config['JWT_TOKEN_LOCATION']=["headers"]
+app.config['JWT_HEADER_NAME']=["Authorization"]
+app.config["JWT_HEADER_TYPE"]="Bearer"
+api = Api(app)
 
 parser = reqparse.RequestParser()
 
-users = [user.User(1, 'hhoareau', 'hh4271'),user.User(2, 'paul.dudule', 'hh4271')]
-username_table = {u.username: u for u in users}
-userid_table = {u.id: u for u in users}
+#users = [user.User(1, 'hhoareau@gmail.com', 'hh4271'),user.User(2, 'paul.dudule@gmail.com', 'hh4271')]
+#username_table = {u.username: u for u in users}
+#userid_table = {u.id: u for u in users}
 
 #Fixer les paramétres du parser
 parser.add_argument('limit', type=int, help='Images return')
 parser.add_argument('quality', type=bool, help='Best quality')
 
-#Initier les utilisateurs
-username_table = {u.username: u for u in users}
-userid_table = {u.id: u for u in users}
-
 
 def authenticate(username, password):
-    user = username_table.get(username, None)
-    if user and safe_str_cmp(user.password.encode('utf-8'), password.encode('utf-8')):
-        return user
+    return user.User(tools.getUser(username=username,password=password))
+    #user = username_table.get(username, None)
+    #if user and safe_str_cmp(user.password.encode('utf-8'), password.encode('utf-8')):
+    #    return user
 
 def identity(payload):
-    user_id = payload['identity']
-    return userid_table.get(user_id, None)
+    return tools.getUser(id=payload['identity'])
 
 #http://localhost:5000/images/dogs?limit=10&quality=true
 #https://server.f80.fr:5600/dogs/10/true
@@ -49,19 +48,21 @@ jwt = JWT(app, authenticate, identity)
 @api.route('/images/<string:query>')
 @api.doc(params={'query': "Requête pour intérroger les bases de données d'image"})
 class Image(Resource):
-    @jwt_required()
     @api.doc(responses={
         200: 'Liste des urls des photos correspondant à la requête',
         404: 'Aucune image disponible par rapport à la requête'
     })
     @api.expect(parser)
+    @jwt_required()
     def get(self,query):
         args = parser.parse_args() #va nous permettre de parser automatiquement les paramètres
+        #La clé est constitué à partir de la requete, de la limite et de la qualité demandée
         key=query+str(args["limit"])+str(args["quality"])
         rc=dao.read_query(key)
         if rc is None:
+            #Si la clé n'a pas été trouvé on interroge le fournisseur
             rc=tools.queryPixabay(query,args["limit"],args["quality"])
-            dao.save_query(key,rc)
+            dao.write_query(key,rc)
 
         return jsonify(rc)
 
