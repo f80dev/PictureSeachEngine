@@ -24,20 +24,37 @@ La documentation de l'API générée par l'extension RestPlus se trouve ici :
 # Le code
 Le code est abondamment commenté. 
 
+# Sécurisation du serveur
+Dans cet exemple on va utilise des certificats Let's Encrypt.
+
+tout d'abord vous devez paramétrer le DNS de votre domaine pour le faire pointer vers
+votre serveur. La procédure dépend de votre fournisseur de nom de domaine. Par exemple, chez
+1 and 1 elle est expliquée ici. Puis, sur le serveur, on récupère certbot qui automatise la procédure
+d'installation des certificats.
+
+`apt-get -t jessie-backports install certbot`
+
+puis on execute la commande :
+
+`certbot certonly --standalone -d sub.domaine.com` 
+en remplacant sub.domain.com par votre domaine
+
 # Configuration du serveur
 Dans le projet on utilise un serveur Linux pour héberger nos images Docker, et l'on se place dans une configuration root
 (ce qui n'est clairement pas conseillé en environnement de production)
 
 L'installation de docker dépend de l'OS mais dans beaucoup de cas, il suffit d'exécuter :
-<pre>
-sudo curl -sSL get.docker.com | sh
-</pre>
+
+`sudo curl -sSL get.docker.com | sh`
+
 
 # La base de données
 La base de données est utilsée comme cache pour stocker les réponses aux requêtes. 
 On aurait pu utiliser des techniques plus légère ou des bases de données plus simple
-que MongoDB mais l'objectif était également de mettre en oeuvre une base NoSQL de plus
-en plus utilisé dans les projets d'envergure.
+que MongoDB mais l'objectif est d'illustrer l'usage d'une base moderne
+ - opérationnelle pour le big data,
+ - compatible avec l'<a href="https://www.datacamp.com/courses/introduction-to-using-mongodb-for-data-science-with-python">analyse de données</a>,
+ - hautement scalable.
 
 Via docker, on peut avoir une installation de la base particulierement simple à mettre en
 oeuvre :

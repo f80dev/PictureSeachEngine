@@ -5,6 +5,7 @@
     <title>Title</title>
 </head>
 <body>
+<div id="zone_respons"></div>
 <script>
     var domain="http://localhost:5000";
     function getToken(username,password,func){
@@ -27,11 +28,14 @@
     getToken("hhoareau@gmail.com","hh4271",(token)=>{
         fetch(domain+"/images/dogs?limit=10&quality=true"
         ,{
-            headers:new Headers({'Authorization':"Bearer "+token}
-            )}
+            headers:new Headers({'Authorization':"JWT "+token})
+        }
         ).then((r)=>{
             r.json().then((result)=>{
-                console.log(JSON.stringify(result));
+                var zone=document.getElementById("zone_respons");
+                for(let r of result){
+                    zone.innerHTML+="<img src='"+r+"' style='width:200px'><br>";
+                }
             });
         });
     });

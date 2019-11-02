@@ -15,9 +15,9 @@ from flask import Flask, jsonify
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'hh4280!!'
-app.config['JWT_TOKEN_LOCATION']=["headers"]
-app.config['JWT_HEADER_NAME']=["Authorization"]
-app.config["JWT_HEADER_TYPE"]="Bearer"
+#app.config['JWT_TOKEN_LOCATION']=["headers"]
+#app.config['JWT_HEADER_NAME']=["Authorization"]
+#app.config["JWT_HEADER_TYPE"]="Bearer"
 api = Api(app)
 
 parser = reqparse.RequestParser()
