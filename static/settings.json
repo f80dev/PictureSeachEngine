@@ -1,9 +1,15 @@
 {
   "database": {
-    "server":"server.f80.fr",
+    "server":"home.f80.fr",
     "port": "27017",
     "username": "admin",
     "password": "admin_password"
+  },
+
+  "api":{
+    "server":"https://home.f80.fr",
+    "port": 5600,
+    "endpoint": "api"
   },
 
   "api_users": [

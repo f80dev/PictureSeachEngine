@@ -21,10 +21,6 @@ Le front-end est accessible directement à l'adresse : https://pse.f80.fr
 La documentation de l'API générée par l'extension RestPlus se trouve ici : 
 
 
-# Le code
-Le code est abondamment commenté. 
-
-
 # Sécurisation du serveur
 Dans cet exemple on va utilise des certificats Let's Encrypt.
 
@@ -52,7 +48,7 @@ du serveur par la commande
 # Installation de docker
 Dans le projet on utilise un serveur Linux 
 pour héberger nos images Docker, et l'on se place dans une configuration root
-(ce qui n'est clairement pas conseillé en environnement de production)
+(ce qui n'est pas conseillé en environnement de production)
 
 L'installation de docker dépend de l'OS mais dans beaucoup de cas, 
 il suffit d'exécuter :
@@ -78,6 +74,30 @@ On aurait pû utiliser
 - un autre couple (user / mot de passe) que (admin / admin_password)
 
 # Installation du serveur
+
+L'installation de notre serveur flask se fait simplement par la commande :
+`docker pull f80hub/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d f80hub/picturesearchenginex86:latest ssl`
+grâce à cette commande on a :
+- télécharger l'image picturesearchenginex86
+- programmer le rédémarrage de notre API si le serveur redémarre
+- ouvert l'accès aux certificats pour permettre a Flask de sécuriser les transactions
+- ouvert le port 5600 pour la communication a notre API
+- enfin en terminant par "ssl" on configure l'API en mode sécurisé 
+
+# Fichier de configuration
+Dans une optique d'industrialisation, on stocke l'ensemble
+des paramètres dans une fichier json. Ce fichier est utilisé
+à la fois par le backend et le frontend pour se paramètrer.
+
+# Tests
+Pour tester notre API, nous avons développé une page HTML contenant un code minimal javascript
+pour 
+- demandé un token d'utilisation de l'API
+- utilisé le token obtenue pour interroger l'API 
+
+# Le code
+Le code est abondamment documenté. Via RestPlus on génére
+automatiquement une documentation pour notre API
 
 
 # Références

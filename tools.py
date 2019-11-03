@@ -2,15 +2,18 @@ import urllib
 
 from flask import json
 
-def settings():
-    with open('settings.json') as json_file:
-        return json.load(json_file)
+def settings(field=""):
+    with open('./static/settings.json') as json_file:
+        if field=="":
+            return json.load(json_file)
+        else:
+            return json.load(json_file)[field]
 
-set_sources=settings()["sources"]
+set_sources=settings("sources")
 
 #retourne un user par le username et password
 def getUser(username="",password="",id=""):
-    for c in settings()["api_users"]:
+    for c in settings("api_users"):
         if len(username)>0 and len(password)>0:
             if c["username"]==username and password==c["password"]:return c
         else:

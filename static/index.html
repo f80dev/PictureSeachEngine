@@ -8,9 +8,16 @@
 <div id="zone_respons"></div>
 <script>
     var domain="http://localhost:5000";
-    function getToken(username,password,func){
+
+    function getSettings(func){
+        fetch("settings.json").then((r)=>{
+            r.json().then((json)=>{func(json)});
+        })
+    }
+
+    function getToken(domain,username,password,func){
         fetch(domain+"/auth",{
-                method: 'POST',
+                method:'POST',
                 headers: new Headers({
                     "Content-Type":"application/json",
                     "Cache-Control":"no-cache",
@@ -25,17 +32,23 @@
             });
     }
 
-    getToken("hhoareau@gmail.com","hh4271",(token)=>{
-        fetch(domain+"/images/dogs?limit=10&quality=true"
-        ,{
-            headers:new Headers({'Authorization':"JWT "+token})
-        }
-        ).then((r)=>{
-            r.json().then((result)=>{
-                var zone=document.getElementById("zone_respons");
-                for(let r of result){
-                    zone.innerHTML+="<img src='"+r+"' style='width:200px'><br>";
+    getSettings((settings)=>{
+        getToken(settings.api.server+":"+settings.api.port,"hhoareau@gmail.com","hh4271",(token)=>{
+            fetch(settings.api.server+":"+settings.api.port+"/"+settings.api.endpoint+"/dogs?limit=10&quality=true"
+                ,{
+                    headers:new Headers({'Authorization':"JWT "+token})
                 }
+            ).then((r)=>{
+                r.json().then((result)=>{
+                    var zone=document.getElementById("zone_respons");
+                    if(result.length==0){
+                        zone.innerHTML="Aucune réponse";
+                    } else {
+                        for(let r of result){
+                            zone.innerHTML+="<img src='"+r+"' style='width:200px'><br>";
+                        }
+                    }
+                                    });
             });
         });
     });
