@@ -16,9 +16,8 @@ app.config['SECRET_KEY'] = 'hh4280!!'
 api = Api(app)
 dao=dao.dao(sys.argv[2],sys.argv[3],sys.argv[4])
 
-parser = reqparse.RequestParser()
-
 #Fixer les paramétres du parser
+parser = reqparse.RequestParser()
 parser.add_argument('limit', type=int, help='Images return')
 parser.add_argument('quality', type=bool, help='Best quality')
 
@@ -49,8 +48,8 @@ class Image(Resource):
         #Ici on appel le service pixabay pour récupérer des images
         rc=tools.queryPixabay(query,args["limit"],args["quality"])
 
-        #Si on a pas assez d'image on complète avec le service unsplash
-        if len(rc)<10:rc.append(tools.queryUnsplash(query))
+        #On ajoute les images de unspash
+        rc.append(tools.queryUnsplash(query))
 
         #Chaque requête est enregistrée pour la gestion des quotas et d'une éventuelle facturation
         dao.write_query(query,flask_jwt.current_identity)

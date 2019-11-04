@@ -4,28 +4,56 @@
     <meta charset="UTF-8">
     <title>Démonstration d'appel de l'API PictureSearchEngine</title>
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-149843481-2"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-151456567-1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'UA-149843481-2');
+  gtag('config', 'UA-151456567-1');
 </script>
 
 
 </head>
-<body style="text-align: center;background-color: lightgray;" onload="search()">
-<h2>Client test de l'API PSE (PictureSearchEngine)</h2>
 
-<a href="javascript:search()">Recherche</a>
-<div id="zone_respons" style="width:90vw;height:80vh;text-align: center;overflow: scroll;" ></div>
+<style>
+
+    .bouton {
+        border: none;
+        padding: 6px 0 6px 0;
+        border-radius: 2px;
+        box-shadow: 3px 3px 12px #999;
+        background: lightblue;
+        font: bold 16px Arial;
+        cursor: pointer;
+        color: #555;
+    }
+
+</style>
+
+<body style="text-align: center;background-color: lightgray;" onload="search()">
+
+<table style="width:100%;"><tr>
+    <td>
+        <h2>Client test de l'API PSE (PictureSearchEngine)</h2>
+        <br>
+        <span onclick="search()" class="bouton">&nbsp;Recherche&nbsp;</span>
+        <br><br>
+    </td>
+    <td>
+        <br>
+        Copyrith F80 - 2019<br>
+        Version 1.0<br>
+        <a href="mailto:contact@f80.fr">Hervé HOAREAU</a>
+    </td>
+</tr></table>
+
+
+
+<div id="zone_respons" style="width:90vw;text-align: center;" ></div>
 <br><br>
-<br>
-Copyrith F80 - 2019<br>
-Version 1.0<br>
-<a href="mailto:contact@f80.fr">Hervé HOAREAU</a>
+
 
 <script>
 
@@ -76,7 +104,7 @@ Version 1.0<br>
     getToken(url,"demo","demo_password",(token)=>{
         console.log("Token récupéré = "+token);
 
-        var query=prompt("Des images de quoi (1 seul mot) ?");
+        var query=prompt("Des images de quoi (1 seul mot) ?","chatons");
         if(query!=null && query.length>2){
             query=query.split(" ")[0].trim();//On ne conserve que le premier mot
 
@@ -91,7 +119,7 @@ Version 1.0<br>
                     } else {
                         zone.innerHTML="";
                         for(let r of result){
-                            zone.innerHTML+="<img style='display:inline-block;margin:5px;width:300px;' src='"+r+"'><br>";
+                            zone.innerHTML+="<img style='display: inline-block;margin:5px;width:300px;height:250px;' src='"+r+"'>";
                         }
                     }
                 });
