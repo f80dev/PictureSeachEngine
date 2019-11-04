@@ -1,0 +1,27 @@
+database:
+  #server: home.f80.fr
+  #server: server.f80.fr
+  port: 27017
+  #username: admin
+  #password: admin_password
+
+api:
+  server: https://home.f80.fr
+  port: 5600
+  endpoint: api
+
+api_users:
+  - id: 1
+    username: mydemo
+    password: mydemo
+  - id: 2
+    username: hhoareau@gmail.com
+    password: hh4271
+  - id: 3
+    username: paul.dudule@gmail.com
+    password: hh4280
+
+sources:
+  pixabay:
+    key: 5489947-2039fe3621c0de1cbb91d08c6
+    endpoint: https://pixabay.com/api/

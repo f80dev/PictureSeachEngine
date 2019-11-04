@@ -3,7 +3,7 @@
 
 #x86
 #docker build -t f80hub/picturesearchenginex86 . & docker push f80hub/picturesearchenginex86:latest
-#docker rm -f picturesearchenginex86 && docker pull f80hub/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d f80hub/picturesearchenginex86:latest server.f80.fr 5600 ssl
+#docker rm -f picturesearchenginex86 && docker pull f80hub/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d f80hub/picturesearchenginex86:latest server.f80.fr 5600 admin admin_password ssl
 
 #Après renouvellement les certificats doivent être copié dans le répertoire /root/certs
 #cp /etc/letsencrypt/live/server.f80.fr/* /root/certs

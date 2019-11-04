@@ -1,13 +1,15 @@
 import urllib
-
+import yaml
 from flask import json
 
 def settings(field=""):
-    with open('./static/settings.json') as json_file:
+    with open('./static/settings.yaml') as json_file:
         if field=="":
-            return json.load(json_file)
+            return yaml.load(json_file)
         else:
-            return json.load(json_file)[field]
+            return yaml.load(json_file)[field]
+
+
 
 set_sources=settings("sources")
 

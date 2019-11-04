@@ -1,0 +1,118 @@
+POST http://localhost:5000/auth
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"username":"hhoareau@gmail.com","password":"hh4271"}
+
+<> 2019-11-01T073905.200.json
+
+###
+
+POST http://localhost:5000/auth
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"username":"hhoareau@gmail.com","password":"hh4271"}
+
+<> 2019-11-01T072052.200.json
+
+###
+
+POST http://localhost:5000/auth
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"username":"hhoareau@gmail.com","password":"hh4271"}
+
+<> 2019-11-01T064215.200.json
+
+###
+
+POST http://localhost:5000/auth
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"username":"hhoareau@gmail.com","password":"hh4271"}
+
+<> 2019-11-01T064212.200.json
+
+###
+
+POST http://localhost:5000/auth
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"username":"hhoareau@gmail.com","password":"hh4271"}
+
+<> 2019-11-01T064038.200.json
+
+###
+
+POST http://localhost:5000/auth
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"username":"hhoareau@gmail.com","password":"hh4271"}
+
+<> 2019-11-01T063750.500.html
+
+###
+
+POST http://localhost:5000/auth
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"username":"hhoareau@gmail.com","password":"hh4271"}
+
+<> 2019-11-01T063733.500.html
+
+###
+
+POST http://localhost:5000/auth
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"username":"hhoareau@gmail.com","password":"hh4271"}
+
+###
+
+POST http://localhost:5000/auth
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"username":"hhoareau@gmail.com","password":"hh4271"}
+
+<> 2019-11-01T061941.200.json
+
+###
+
+POST http://localhost:5000/auth
+Accept: */*
+Cache-Control: no-cache
+Content-Type: application/json
+
+{"username":"hhoareau@gmail.com","password":"hh4271"}
+
+<> 2019-11-01T061605.401.json
+
+###
+
+POST http://localhost:5000/auth
+Accept: */*
+Cache-Control: no-cache
+
+{"username":"hhoareau@gmail.com","password":"hh4271"}
+
+<> 2019-11-01T061124.500.html
+
+###
+

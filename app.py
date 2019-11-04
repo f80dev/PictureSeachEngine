@@ -8,14 +8,13 @@ from flask_cors import CORS
 import dao
 import user
 import tools
-
 from flask import Flask, jsonify
 
 app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'hh4280!!'
 api = Api(app)
-dao.init_database(sys.argv[1])
+dao=dao.dao(sys.argv[2],sys.argv[3],sys.argv[4])
 
 parser = reqparse.RequestParser()
 
@@ -58,7 +57,7 @@ class Image(Resource):
 
 
 if __name__ == '__main__':
-    _port=sys.argv[2]
+    _port=sys.argv[1]
     if "debug" in sys.argv:
         app.run(host="0.0.0.0",port=_port,debug=True)
     else:

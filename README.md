@@ -89,15 +89,22 @@ Dans une optique d'industrialisation, on stocke l'ensemble
 des paramètres dans une fichier json. Ce fichier est utilisé
 à la fois par le backend et le frontend pour se paramètrer.
 
+# Remarque divers
+Le code est abondamment documenté. Via RestPlus on génére
+automatiquement une documentation pour notre API
+
+Pour le fichier de configuration on utilise YAML plutôt que JSON. L'usage de ce
+format est "moin natif" en javascript ou python mais on gagne en visibilité
+mais surtout YAML supporte les commentaires. 
+
 # Tests
 Pour tester notre API, nous avons développé une page HTML contenant un code minimal javascript
 pour 
-- demandé un token d'utilisation de l'API
-- utilisé le token obtenue pour interroger l'API 
+- demander un token d'utilisation de l'API
+- utiliser le token obtenue pour interroger l'API
+- afficher le résultat
 
-# Le code
-Le code est abondamment documenté. Via RestPlus on génére
-automatiquement une documentation pour notre API
+Dans un prochain article, nous remplacerons ce fichier par une web application développée sur Angular 
 
 
 # Références
