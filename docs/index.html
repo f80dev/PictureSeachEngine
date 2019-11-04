@@ -119,7 +119,7 @@
             //Si la requête est bien valable, on appele l'API. Le token est passé dans le header
             fetch(url+"/api/"+query+"?limit=10&quality=true",{headers:new Headers({'Authorization':"JWT "+token})}).then((r)=>{
                 r.json().then((result)=>{
-                    if(result.length==0){
+                    if(result==null || result.length==0){
                         zone.innerHTML="Aucune réponse à la recherche sur "+query;
                     } else {
                         zone.innerHTML="";
