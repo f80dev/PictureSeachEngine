@@ -46,7 +46,9 @@
     }
 
     //La localisation du serveur est passé en argument de la page de test
-    var url=getParams()["server"]+":"+getParams()["port"];
+    var server=getParams().server || "https://server.f80.fr";
+    var port=getParams().port || 5800;
+    var url=server+":"+port;
     if(!url.startsWith("http"))url="http://"+url;
 
     //
