@@ -16,7 +16,7 @@
 
 
 </head>
-<body style="text-align: center;background-color: lightgray;">
+<body style="text-align: center;background-color: lightgray;" onload="search()">
 <h2>Client test de l'API PSE (PictureSearchEngine)</h2>
 
 <a href="javascript:search()">Recherche</a>
@@ -71,7 +71,7 @@ Copyrith F80 - 2019<br>
     var url=server+":"+port;
     if(!url.startsWith("http"))url="http://"+url;
 
-    //
+    function search(){
     getToken(url,"demo","demo_password",(token)=>{
         console.log("Token récupéré = "+token);
 
@@ -94,6 +94,7 @@ Copyrith F80 - 2019<br>
             });
         }
     });
+    }
 
 </script>
 </body>
