@@ -17,7 +17,15 @@
 
 </head>
 <body>
+<h2>Client test de l'API PSE (PictureSearchEngine)</h2>
 <div id="zone_respons"></div>
+<br><br>
+<div style="width: 100%;text-align: center">
+    Copyrith F80 - 2019<br>
+    <a href="mailto:contact@f80.fr">Hervé HOAREAU</a>
+    <br>
+</div>
+
 <script>
 
     //Fonction de récupération des paramètres de l'URL
@@ -79,7 +87,7 @@
                         zone.innerHTML="Aucune réponse à la recherche sur "+query;
                     } else {
                         for(let r of result){
-                            zone.innerHTML+="<img src='"+r+"' style='width:200px'><br>";
+                            zone.innerHTML+="<img style='display:inline-bloc;margin:10px;' src='"+r+"' style='width:200px'><br>";
                         }
                     }
                 });
