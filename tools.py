@@ -39,9 +39,10 @@ def queryPixabay(query:str,limit:int=10,quality:bool=False):
     return rc
 
 
+#Appel de l'API de unplash : voir https://unsplash.com/documentation#search-photos
 def queryUnsplash(query):
     unsplash_settings = settings("sources")["unsplash"]
-    url = unsplash_settings["endpoint"] + "search/photos?query="+query+"&client_id=" + unsplash_settings["key"]
+    url = unsplash_settings["endpoint"] + "search/photos?query="+query+"&per_page=20&client_id=" + unsplash_settings["key"]
 
     with urllib.request.urlopen(url) as response:
         result=json.load(response)

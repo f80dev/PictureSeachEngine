@@ -32,18 +32,18 @@
 
 </style>
 
-<body style="text-align: center;background-color: lightgray;" onload="search()">
+<body style="text-align: center;background-color: lightgray;">
 
 <table style="width:100%;"><tr>
     <td>
         <h2>Client test de l'API PSE (PictureSearchEngine)</h2>
         <br>
-        <span onclick="search()" class="bouton">&nbsp;Recherche&nbsp;</span>
+        <span onclick="search()" class="bouton">&nbsp;Rechercher&nbsp;</span>
         <br><br>
     </td>
     <td>
         <br>
-        Copyrith F80 - 2019<br>
+        Copyrigth <a href="http://f80.fr">F80</a> - 2019<br>
         Version 1.0<br>
         <a href="mailto:contact@f80.fr">Hervé HOAREAU</a>
     </td>
@@ -98,12 +98,17 @@
     var server=getParams().server || "https://server.f80.fr";
     var port=getParams().port || 5800;
     var url=server+":"+port;
+    var token=null;
     if(!url.startsWith("http"))url="http://"+url;
+    getToken(url,"demo","demo_password",(t)=> {
+        token=t;
+        console.log("Token récupéré = " + token);
+    });
+
+    var h=setTimeout(search,5000);
 
     function search(){
-    getToken(url,"demo","demo_password",(token)=>{
-        console.log("Token récupéré = "+token);
-
+        clearTimeout(h);
         var query=prompt("Des images de quoi (1 seul mot) ?","chatons");
         if(query!=null && query.length>2){
             query=query.split(" ")[0].trim();//On ne conserve que le premier mot
@@ -125,7 +130,6 @@
                 });
             });
         }
-    });
     }
 
 </script>

@@ -27,8 +27,7 @@ def authenticate(username, password):
 def identity(payload):
     return tools.getUser(id=payload['identity'])
 
-#http://localhost:5000/images/dogs?limit=10&quality=true
-#https://server.f80.fr:5600/dogs/10/true
+#http://localhost:8090/index.html?server=http://localhost&port=5800
 
 jwt = JWT(app, authenticate, identity)
 
@@ -49,7 +48,8 @@ class Image(Resource):
         rc=tools.queryPixabay(query,args["limit"],args["quality"])
 
         #On ajoute les images de unspash
-        rc.append(tools.queryUnsplash(query))
+        for pict in tools.queryUnsplash(query):
+            rc.append(pict)
 
         #Chaque requête est enregistrée pour la gestion des quotas et d'une éventuelle facturation
         dao.write_query(query,flask_jwt.current_identity)
