@@ -12,14 +12,11 @@ api:
 
 api_users:
   - id: 1
-    username: mydemo
-    password: mydemo
+    username: demo
+    password: demo_password
   - id: 2
-    username: hhoareau@gmail.com
-    password: hh4271
-  - id: 3
-    username: paul.dudule@gmail.com
-    password: hh4280
+    username: demo2
+    password: demo2_password
 
 sources:
   pixabay:

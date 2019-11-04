@@ -44,17 +44,17 @@ du serveur par la commande
 
 `mkdir /root/certs && cp /etc/letsencrypt/live/sub.domain.com/* /root/certs`
 
+# Configuration du serveur
+On décrit ici la configuration d'un serveur Linux. 
+Toute l'installation va se faire en mode root ce qui n'est pas conseillé en environnement de production.
+Ainsi le répertoire /root va héberger :
+- un sous répertoire "data" destiné à stocker la base MondoDB
+- un sous répertoire "certs" va recevoir une copie des certificats pour la connexion SSL
 
-# Installation de docker
-Dans le projet on utilise un serveur Linux 
-pour héberger nos images Docker, et l'on se place dans une configuration root
-(ce qui n'est pas conseillé en environnement de production)
-
-L'installation de docker dépend de l'OS mais dans beaucoup de cas, 
-il suffit d'exécuter :
+Si l'on part d'un serveur vierge, il faut commencer par installer Docker.
+Pour Linux et dans beaucoup de cas, il suffit d'exécuter :
 
 `sudo curl -sSL get.docker.com | sh && systemctl enable docker && systemctl start docker`
-
 
 # La base de données
 La base de données est utilsée comme cache pour stocker les réponses aux requêtes. 
@@ -75,8 +75,11 @@ On aurait pû utiliser
 
 # Installation du serveur
 
+
 L'installation de notre serveur flask se fait simplement par la commande :
-`docker pull f80hub/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d f80hub/picturesearchenginex86:latest ssl`
+
+`docker pull f80hub/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d f80hub/picturesearchenginex86:latest localhost admin admin_password 5600 ssl`
+
 grâce à cette commande on a :
 - télécharger l'image picturesearchenginex86
 - programmer le rédémarrage de notre API si le serveur redémarre
