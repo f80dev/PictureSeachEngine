@@ -67,7 +67,7 @@ que MongoDB mais l'objectif est d'illustrer l'usage d'une base moderne
 Via docker, on peut avoir une installation de la base particulierement simple à mettre en
 oeuvre :
 
-`docker run --restart=always -v /root/mongodata:/data/db -d -p 27017:27017 --name mongodb -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=admin_password mongo`
+`docker run --restart=always -v /root/mongodata:/data/db -d -p 27017-27019:27017-27019 --name mongodb -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=admin_password mongo`
 
 On aurait pû utiliser
 - un autre port que le port standard : 27017 

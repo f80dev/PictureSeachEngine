@@ -49,6 +49,9 @@ class Image(Resource):
         #Ici on appel le service pixabay pour récupérer des images
         rc=tools.queryPixabay(query,args["limit"],args["quality"])
 
+        #Si on a pas assez d'image on complète avec le service unsplash
+        if len(rc)<10:rc.append(tools.queryUnsplash(query))
+
         #Chaque requête est enregistrée pour la gestion des quotas et d'une éventuelle facturation
         dao.write_query(query,flask_jwt.current_identity)
 
@@ -66,7 +69,6 @@ if __name__ == '__main__':
         #ils ne peuvent donc appeler que des serveurs en https. Il est donc préférable
         #de déployer l'API sur un serveur sécurisé
         if "ssl" in sys.argv:
-            print("Activation du ssl")
             context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
             context.load_cert_chain("/app/certs/fullchain.pem", "/app/certs/privkey.pem")
             app.run(host="0.0.0.0", port=_port, debug=False, ssl_context=context)

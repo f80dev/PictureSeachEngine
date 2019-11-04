@@ -1,23 +1,15 @@
 import datetime
-
 import pymongo as pymongo
 from bson import ObjectId
 
-import tools
-
+#Implémentation de la couche d'accès à la base de données
+#Dans l'exemple, la base MongoDB permet de tracer les appels à l'API
 class dao:
     db=None
-    #chargement des paramètres liés à la base de données
-    db_settings=tools.settings("database")
 
-    def __init__(self,server=None,username=None,password=None):
-        if server is None:server=self.db_settings["server"]
-        if username is None:username=self.db_settings["username"]
-        if password is None:password=self.db_settings["password"]
-
-        url_base = "mongodb://" + username+":"+password+"@"+server + ":"+str(self.db_settings["port"])+"/"
+    def __init__(self,server,username,password,port=27017):
+        url_base = "mongodb://" + username+":"+password+"@"+server + ":"+str(port)+"/"
         self.db=pymongo.MongoClient(url_base)["PSE_db"]
-        self.db["queries"]
 
 
     def write_query(self,query:str,identity):
@@ -25,7 +17,7 @@ class dao:
             "_id":ObjectId(),
             "query":query,
             "user":identity["username"],
-            "dtCreate":datetime.datetime.now()
+            "dtCreate":datetime.datetime.now().timestamp()
         })
-        #On pourrait faire une sauvegarde mais l'usage de replace_one permet également de faire des update
-        self.db["queries"].replace_one(filter={"_id":record["_id"]},replacement=record,upsert=True)
+        print("Ecriture en base")
+        self.db["queries"].insert_one(record)

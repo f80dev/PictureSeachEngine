@@ -43,27 +43,26 @@
             });
     }
 
-    getSettings((settings)=>{
-        var url=getParams()["server"]+":"+getParams()["port"];
-        if(!url.startsWith("http"))url="http://"+url;
-        getToken(url,"hhoareau@gmail.com","hh4271",(token)=>{
-            fetch(url+"/"+settings.api.endpoint+"/dogs?limit=10&quality=true"
-                ,{
-                    headers:new Headers({'Authorization':"JWT "+token})
-                }
-            ).then((r)=>{
-                r.json().then((result)=>{
-                    var zone=document.getElementById("zone_respons");
-                    if(result.length==0){
-                        zone.innerHTML="Aucune réponse";
-                    } else {
-                        for(let r of result){
-                            zone.innerHTML+="<img src='"+r+"' style='width:200px'><br>";
-                        }
+    var url=getParams()["server"]+":"+getParams()["port"];
+    if(!url.startsWith("http"))url="http://"+url;
+    getToken(url,"hhoareau@gmail.com","hh4271",(token)=>{
+        console.log("Token récupéré = "+token);
+        var query=prompt("Des images de quoi ?");
+        if(query!=null && query.length>2){
+        fetch(url+"/api/"+query+"?limit=10&quality=true",{headers:new Headers({'Authorization':"JWT "+token})}
+        ).then((r)=>{
+            r.json().then((result)=>{
+                var zone=document.getElementById("zone_respons");
+                if(result.length==0){
+                    zone.innerHTML="Aucune réponse";
+                } else {
+                    for(let r of result){
+                        zone.innerHTML+="<img src='"+r+"' style='width:200px'><br>";
                     }
-                });
+                }
             });
         });
+        }
     });
 
 </script>
