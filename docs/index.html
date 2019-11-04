@@ -20,7 +20,7 @@
 <h2>Client test de l'API PSE (PictureSearchEngine)</h2>
 
 <a href="javascript:search()">Recherche</a>
-<div id="zone_respons" style="width:90%;"></div>
+<div id="zone_respons" style="width:90vw;height:80vh;text-align: center;"></div>
 <br><br>
 <br>
 Copyrith F80 - 2019<br>
@@ -90,7 +90,7 @@ Version 1.0<br>
                         zone.innerHTML="Aucune réponse à la recherche sur "+query;
                     } else {
                         for(let r of result){
-                            zone.innerHTML+="<img style='display:inline;margin:10px;width:300px;' src='"+r+"'><br>";
+                            zone.innerHTML+="<img style='display:inline-block;margin:10px;width:300px;' src='"+r+"'><br>";
                         }
                     }
                 });
