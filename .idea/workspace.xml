@@ -33,7 +33,7 @@
         <counts>
           <entry key="CNAME" value="11" />
           <entry key="Dockerfile" value="234" />
-          <entry key="html" value="1303" />
+          <entry key="html" value="1370" />
           <entry key="json" value="10" />
           <entry key="md" value="487" />
           <entry key="py" value="866" />
@@ -43,7 +43,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Dockerfile" value="234" />
-          <entry key="HTML" value="1303" />
+          <entry key="HTML" value="1370" />
           <entry key="JSON" value="10" />
           <entry key="Markdown" value="487" />
           <entry key="PLAIN_TEXT" value="11" />
@@ -81,8 +81,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/docs/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+            <state relative-caret-position="155">
+              <caret line="85" column="38" selection-start-line="85" selection-start-column="38" selection-end-line="85" selection-end-column="38" />
               <folding>
                 <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
               </folding>
@@ -274,7 +274,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="npm.server">
+  <component name="RunManager">
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="PictureSeachEngine" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -311,22 +311,6 @@
       <option name="launchJavascriptDebuger" value="false" />
       <method v="2" />
     </configuration>
-    <configuration name="server" type="js.build_tools.npm" factoryName="npm" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/static/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="server" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2">
-        <option name="LaunchBrowser.Before.Run" url="http://127.0.0.1:8090/?server=localhost&amp;port=5600" />
-      </method>
-    </configuration>
-    <list>
-      <item itemvalue="npm.server" />
-      <item itemvalue="Python.app" />
-    </list>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -454,7 +438,35 @@
       <option name="project" value="LOCAL" />
       <updated>1572883393548</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Première mise en ligne pour sauvegard">
+      <created>1572883525317</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1572883525317</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Première mise en ligne pour sauvegard">
+      <created>1572883573157</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1572883573157</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Première mise en ligne pour sauvegard">
+      <created>1572883626893</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1572883626893</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Première mise en ligne pour sauvegard">
+      <created>1572883690907</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1572883690907</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -663,8 +675,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/docs/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="27" lean-forward="true" selection-start-line="27" selection-end-line="27" />
+        <state relative-caret-position="155">
+          <caret line="85" column="38" selection-start-line="85" selection-start-column="38" selection-end-line="85" selection-end-column="38" />
           <folding>
             <element signature="n#style#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>

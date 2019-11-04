@@ -83,12 +83,13 @@ Version 1.0<br>
             //Si la requête est bien valable, on appele l'API. Le token est passé dans le header
             fetch(url+"/api/"+query+"?limit=10&quality=true",{headers:new Headers({'Authorization':"JWT "+token})}).then((r)=>{
                 r.json().then((result)=>{
+                    zone.innerHTML="";
                     var zone=document.getElementById("zone_respons");
                     if(result.length==0){
                         zone.innerHTML="Aucune réponse à la recherche sur "+query;
                     } else {
                         for(let r of result){
-                            zone.innerHTML+="<img style='display:inline-bloc;margin:10px;width:300px;' src='"+r+"'><br>";
+                            zone.innerHTML+="<img style='display:inline;margin:10px;width:300px;' src='"+r+"'><br>";
                         }
                     }
                 });
