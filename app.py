@@ -6,7 +6,14 @@ import dao
 from flask import Flask, jsonify, request
 from tools import token_required, createToken, settings, queryUnsplash, queryPixabay
 
-#Structure du token d'identification
+"""
+Fonctions principales d'exécution des API
+"""
+
+
+"""
+Structure du token d'identification
+"""
 authorizations={
     "apikey":{
         "type":"apiKey",
@@ -76,7 +83,9 @@ class Image(Resource):
     @token_required(dao)
     def get(self,query):
         """
-
+        API principale d'interrogation des plateformes
+        :param query: contient le mot clé à transmettre aux plateformes de photos
+        :return: liste consolidée d'urls
         """
         args = parser.parse_args()
         #va nous permettre de parser automatiquement les paramètres
@@ -96,21 +105,26 @@ class Image(Resource):
 
 
 if __name__ == '__main__':
+    """
+    La fonction principale se charge de lancer l'instance Flask en tenant compte
+    des options passées via la commande docker
+    """
     _port=sys.argv[1]
     if "debug" in sys.argv:
         app.run(host="0.0.0.0",port=_port,debug=True)
     else:
-        #Le serveur peut être déployé en mode non sécurisé
-        #cela dit la plus part des front-end ne peuvent être hébergés quand mode https
-        #ils ne peuvent donc appeler que des serveurs en https. Il est donc préférable
-        #de déployer l'API sur un serveur sécurisé
         if "ssl" in sys.argv:
+            """
+            Le context de sécurisation est chargé avec les certificats produit par "Let's Encrypt"
+            """
             context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
             context.load_cert_chain("/app/certs/fullchain.pem", "/app/certs/privkey.pem")
             app.run(host="0.0.0.0", port=_port, debug=False, ssl_context=context)
         else:
-            #Le serveur peut fonctionner en mode non sécurisé, dans ce cas aucun certificat n'est nécéssaire
+            """
+        Le serveur peut être déployé en mode non sécurisé
+        cela dit la plus part des front-end ne peuvent être hébergés quand mode https
+        ils ne peuvent donc appeler que des serveurs en https. Il est donc préférable
+        de déployer l'API sur un serveur sécurisé
+        """
             app.run(host="0.0.0.0", port=_port, debug=False)
-
-
-

@@ -145,10 +145,36 @@ dans une fichier YAML. <br>
 Même si ce format est moin courant que json, on gagne en lisibilité et surtout YAML supporte les commentaires. 
 
 ##Principale fonction mise en oeuvre
+Le code est abondamment commenté, donc facilement adaptable.
+
+On peut le décomposer en plusieurs blocs :
+###Le fonctionnement des API
+- les fonctions queryUnsplash et queryPixabay ("tools.py") se chargent 
+de l'interrogation des plateformes de photos.
+- La ressource Image dont l'API "get" se charge de la consolidation 
+des résultats des deux fonctions précédentes
+
+### La gestion des API
+Les fonctions du module "tools.py" s'occupe 
+- de la gestion des token (encodage et décodage)
+
+### La base de donénes
+La base de données est prise en charge par la classe DAO ("dao.py") qui fait 
+l'interface avec la base de données, pour 
+- gérer les utilisateurs des api, (inscription et récupération des droits)
+- tracer l'ensemble des transactions (écriture en base du token et de la date) donnant ainsi la possibilité
+de gestion de quotas et d'une eventuelle facturation 
 
 
-# Installation du serveur
+# Déploiement
 Il est temps d'installer l'API. Là aussi, l'usage de Docker simplifie le déploiement. 
+une fois le code finaliser, le fichier "Dockerfile" permet la construction d'une image
+déployable du serveur d'API.
+
+La commande pour construire l'image et la rendre disponible sur le hub docker est simple :
+`docker build -t <votre_hub>/picturesearchenginex86 . & docker push <votre_hub>/picturesearchenginex86:latest`
+ou <votre_hub> est remplacé par votre compte sur le portail.
+
 Ainsi, l'installation de notre serveur flask se fait par la commande :
 
 `docker pull f80hub/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d f80hub/picturesearchenginex86:latest localhost admin admin_password 5600 ssl`
@@ -174,7 +200,6 @@ Dans l'exemple aucune interface d'enregistrement des développeurs n'est propos�
 
 # Remarque divers
 Le code est abondamment documenté. 
-
 Via RestPlus on génére automatiquement une documentation pour notre API
 
 

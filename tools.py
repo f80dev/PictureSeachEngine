@@ -4,29 +4,23 @@ from flask import json, request
 import jwt
 from functools import wraps
 
+"""
+Librarie réunissant des fonctions de lecture du fichier de paramétrage, 
+les fonctions d'interrogation des bibliothéques d'images et les fonctions
+de gestion des tokens
+"""
+
 def settings(field=""):
+    """
+    Lecture des paramètres du fichier YAML de paramétrage
+    :param field:
+    :return:
+    """
     with open('settings.yaml') as json_file:
         if field=="":
             return yaml.load(json_file)
         else:
             return yaml.load(json_file)[field]
-
-
-def getUser(username:str="",password:str="",id=""):
-    """
-    :param username:
-    :param password:
-    :param id:
-    :return: retourne un user par le username et password
-    """
-    for c in settings("api_users"):
-        if len(username)>0 and len(password)>0:
-            if c["username"]==username and password==c["password"]:return c
-        else:
-            if c["id"]==id: return c
-
-    return None
-
 
 
 
@@ -76,14 +70,17 @@ def queryUnsplash(query):
 
 #Gestion des token _____________________________________________________________________________________________________
 def token_required(dao):
+    """
+    Décorateur en charge de vérifier la présence d'un token dans les appels
+    :param dao:
+    :return:
+    """
     def decorated(f):
         def wrapper(*args,**kwargs):
             token=None
             if 'access_token' in request.headers:
                 token=request.headers["access_token"]
-                #json=decodeToken()
-                #On vérifie que le couple (user,password) est présent dans le fichier de configuration
-                #On aurait pu aussi utiliser un base de donnéesgetUser(username=json["username"],password=json["password"])
+                #On vérifie que le couple contenu dans le token est présent en base
                 if dao.get_user(token=token) is None:
                     return {"message": "token unknown"}, 401
 
@@ -104,6 +101,7 @@ def createToken(username:str,password:str):
     :return: le token d'accès à l'api correspondant au couple user/mot de passe précédent
     """
     return str(jwt.encode({'username': username,'password':password}, 'mon_super_secret', algorithm='HS256'),"utf-8")
+
 
 
 def decodeToken(token:str):
