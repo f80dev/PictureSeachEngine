@@ -60,7 +60,7 @@ class Developer(Resource):
 parser = reqparse.RequestParser()
 parser.add_argument('limit', type=int, help='Number of images return')
 parser.add_argument('quality', type=bool, help='Ask for best quality')
-@api.route("/<string:query>",endpoint=settings("api")["endpoint"])
+@api.route("/api/<string:query>",endpoint=settings("api")["endpoint"])
 @api.doc(params={'query': "Requête pour intérroger les bases de données d'image"})
 @api.doc(security="apikey")
 class Image(Resource):
@@ -91,7 +91,7 @@ class Image(Resource):
         #Chaque requête est enregistrée pour la gestion des quotas et d'une éventuelle facturation
         dao.write_query(query,request.headers["access_token"])
 
-        return jsonify(rc),200,{'Access-Control-Allow-Origin':'*'}
+        return jsonify(rc)
 
 
 

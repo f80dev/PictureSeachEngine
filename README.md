@@ -106,10 +106,7 @@ Certains propriétaires d'autre Open source comme le montre cet article :
 <a href="https://techbeacon.com/app-dev-testing/you-need-api-management-help-11-open-source-tools-consider">11 open-source tools to consider</a>
 
 
-
-
 # La base de données
-
 L'objectif de l'article est également de montrer un exemple d'implémentation d'une base de données puissante dans une 
 API Python. Pour cette raison on installe MongoDB.
 
