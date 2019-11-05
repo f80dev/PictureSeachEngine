@@ -4,8 +4,6 @@ from flask import json, request
 import jwt
 from functools import wraps
 
-
-#Fonction de récupération des paramètres du serveur
 def settings(field=""):
     with open('settings.yaml') as json_file:
         if field=="":
@@ -14,8 +12,13 @@ def settings(field=""):
             return yaml.load(json_file)[field]
 
 
-#retourne un user par le username et password
 def getUser(username:str="",password:str="",id=""):
+    """
+    :param username:
+    :param password:
+    :param id:
+    :return: retourne un user par le username et password
+    """
     for c in settings("api_users"):
         if len(username)>0 and len(password)>0:
             if c["username"]==username and password==c["password"]:return c
@@ -26,8 +29,15 @@ def getUser(username:str="",password:str="",id=""):
 
 
 
-#Interrogation de pixabay pour obtenir les images demandées via query
+
 def queryPixabay(query:str,limit:int=10,quality:bool=False):
+    """
+    Interrogation de pixabay pour obtenir les images demandées via query
+    :param query: contient le mot clé à utiliser pour rechercher les images
+    :param limit: nombre d'images retournées
+    :param quality: permet de restreindre la recherche aux photos de l'éditeur
+    :return: liste au format json des urls des photos correspondant à la requête
+    """
     pixabay_settings=settings("sources")["pixabay"]
     url=pixabay_settings["endpoint"]+"?per_page="+str(limit)+"&image_type=photo&key=" + pixabay_settings["key"] + "&q=" + query
     if quality:url=url+"&editors_choice=true"
@@ -42,8 +52,14 @@ def queryPixabay(query:str,limit:int=10,quality:bool=False):
     return rc
 
 
-#Appel de l'API de unplash : voir https://unsplash.com/documentation#search-photos
+
 def queryUnsplash(query):
+    """
+    Interrogation de pixabay pour obtenir les images demandées via query
+    voir https://unsplash.com/documentation#search-photos
+    :param query:  contient le mot clé à utiliser pour rechercher les images
+    :return: liste au format json des urls des photos correspondant à la requête
+    """
     unsplash_settings = settings("sources")["unsplash"]
     url = unsplash_settings["endpoint"] + "search/photos?query="+query+"&per_page=20&client_id=" + unsplash_settings["key"]
 
@@ -59,31 +75,41 @@ def queryUnsplash(query):
 
 
 #Gestion des token _____________________________________________________________________________________________________
-#Décorateur pour s'assurer que le token est présent dans l'API décorée
-def token_required(f):
-    @wraps(f)
-    def decorated(*args,**kwargs):
-        token=None
+def token_required(dao):
+    def decorated(f):
+        def wrapper(*args,**kwargs):
+            token=None
+            if 'access_token' in request.headers:
+                token=request.headers["access_token"]
+                #json=decodeToken()
+                #On vérifie que le couple (user,password) est présent dans le fichier de configuration
+                #On aurait pu aussi utiliser un base de donnéesgetUser(username=json["username"],password=json["password"])
+                if dao.get_user(token=token) is None:
+                    return {"message": "token unknown"}, 401
 
-        if 'access_token' in request.headers:
-            token=request.headers["access_token"]
-            json=decodeToken(token)
-            #On vérifie que le couple (user,password) est présent dans le fichier de configuration
-            #On aurait pu aussi utiliser un base de données
-            if getUser(username=json["username"],password=json["password"]) is None:
-                return {"message": "token unknown"}, 401
+            if not token:
+                return {"message":"token is missing"},401
 
-        if not token:
-            return {"message":"token is missing"},401
+            return f(*args, **kwargs)
 
-        return f(*args,**kwargs)
-
+        return wrapper
     return decorated
 
-#Création d'un token contenant un user / mot de passe
+
 def createToken(username:str,password:str):
+    """
+    Création d'un token contenant un user / mot de passe
+    :param username:
+    :param password:
+    :return: le token d'accès à l'api correspondant au couple user/mot de passe précédent
+    """
     return str(jwt.encode({'username': username,'password':password}, 'mon_super_secret', algorithm='HS256'),"utf-8")
 
-#Décodage du token créer par createToken
+
 def decodeToken(token:str):
+    """
+    Décodage du token créé par createToken
+    :param token:
+    :return: couple user/password contenus dans le token
+    """
     return jwt.decode(token, 'mon_super_secret', algorithms=['HS256'])

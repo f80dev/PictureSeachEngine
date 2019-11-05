@@ -2,14 +2,11 @@ import ssl
 import sys
 from flask_restplus import Resource, Api, reqparse
 from flask_cors import CORS
-
 import dao
 from flask import Flask, jsonify, request
 from tools import token_required, createToken, settings, queryUnsplash, queryPixabay
 
-app = Flask(__name__)
-CORS(app)
-
+#Structure du token d'identification
 authorizations={
     "apikey":{
         "type":"apiKey",
@@ -18,36 +15,47 @@ authorizations={
     }
 }
 
+"""
+Initialisation du moteur d'execution de l'API
+"""
+app = Flask(__name__)
+CORS(app)
 api = Api(app,authorizations=authorizations)
+
+"""
+Instanciation de la couche de données
+Les paramètres seront passés à l'installation de l'image Docker
+"""
 dao=dao.dao(sys.argv[2],sys.argv[3],sys.argv[4])
-
-
-#Fonctions de gestion des token ________________________________________________________________
-
-#def authenticate(username, password):
-#    return user.User(tools.getUser(username=username,password=password))
-
-#def identity(payload):
-#    return tools.getUser(id=payload['identity'])
-
-#Mise en place des fonctions
-#jwt = JWT(app, authorizations, identity)
-
 
 #http://localhost:8090/index.html?server=http://localhost&port=5800
 
+""""
+Mise en place de l'API d'obtention du token sur base d'un couple user/mot de passe_____________________________________
+"""
 auth_parser = reqparse.RequestParser()
 auth_parser.add_argument('username', required=True,type=str, help='username to use the API')
 auth_parser.add_argument('password', required=True,type=str, help='password to use the API')
 @api.route("/auth")
 class Developer(Resource):
+    """
+    Classe représentant les comptes développeurs habilités à utiliser les API
+    """
     @api.expect(auth_parser)
     @api.doc(responses={200: 'Access token correspondant'})
+
     def get(self):
+        """
+        Inscrit l'utilisateur dans la base de données et retourne un token d'accès
+        :return:
+        """
         args = auth_parser.parse_args()
+        dao.add_user(args["username"],args["password"])
         return jsonify(dict({"access_token":createToken(args["username"],args["password"])}))
 
-#Paramétrage des API _________________________________________________________________________
+
+
+#Paramétrage des API ___________________________________________________________________________________________________
 #Fixer les paramétres du parser
 parser = reqparse.RequestParser()
 parser.add_argument('limit', type=int, help='Number of images return')
@@ -56,15 +64,22 @@ parser.add_argument('quality', type=bool, help='Ask for best quality')
 @api.doc(params={'query': "Requête pour intérroger les bases de données d'image"})
 @api.doc(security="apikey")
 class Image(Resource):
+    """
+    Représentation des photos retournées par l'API
+    """
     @api.doc(responses={
         200: 'Liste des urls des photos correspondant à la requête',
         404: 'Aucune image disponible par rapport à la requête'
     })
 
     @api.expect(parser)
-    @token_required
+    @token_required(dao)
     def get(self,query):
-        args = parser.parse_args() #va nous permettre de parser automatiquement les paramètres
+        """
+
+        """
+        args = parser.parse_args()
+        #va nous permettre de parser automatiquement les paramètres
 
         #Ici on appel le service pixabay pour récupérer des images
         rc=queryPixabay(query,args["limit"],args["quality"])

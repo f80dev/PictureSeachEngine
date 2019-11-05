@@ -78,14 +78,8 @@
      * @param func fonction de callback
      */
     function getToken(domain,username,password,func){
-        fetch(domain+"/auth?username="+username+"&password="+password,{
-                method:'GET',
-                headers: new Headers({
-                    "Content-Type":"application/json",
-                    "Cache-Control":"no-cache",
-                    "Accept":"*/*"
-                })
-            }).then((r)=>{
+        fetch(domain+"/auth?username="+username+"&password="+password)
+            .then((r)=>{
                 r.json().then((result)=>{func(result.access_token);})
             });
     }
@@ -113,7 +107,7 @@
             zone.innerHTML="<img src='wait.gif'>";
 
             //Si la requête est bien valable, on appele l'API. Le token est passé dans le header
-            fetch(url+"/api/"+query+"?limit=10&quality=true",{headers:new Headers({'Authorization':"JWT "+token})}).then((r)=>{
+            fetch(url+"/api/"+query+"?limit=10&quality=true",{headers:new Headers({'access_token':token})}).then((r)=>{
                 r.json().then((result)=>{
                     if(result==null || result.length==0){
                         zone.innerHTML="Aucune réponse à la recherche sur "+query;

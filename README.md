@@ -32,30 +32,53 @@ Dans un second article, nous développerons le front-end:
 
 # Démonstration
 L'interface minimal est accessible directement à l'adresse : https://pse.f80.fr
-La documentation de l'API auto-générée par l'extension 
+La documentation auto-générée par l'extension 
 RestPlus est disponible sur : https://server.f80.fr:5800 
 
 
 # Configuration du serveur
-On décrit ici la configuration d'un serveur Linux. 
+A priori l'api peut être installé sur n'importe quel type d'OS supportant Python. Dans cet exemple, on se repose sur Linux 
 
-Toute l'installation va se faire en mode root ce qui n'est pas conseillé en environnement de production.
+Pour faire simple, toute l'installation va se faire en mode root ce qui n'est pas conseillé en environnement de production.
 Ainsi le répertoire /root va héberger :
-- un sous répertoire "data" destiné à stocker la base MondoDB
-- un sous répertoire "certs" va recevoir une copie des certificats pour la connexion SSL
+- un sous-répertoire "data" destiné à stocker la base MongoDB,
+- un sous-répertoire "certs" va recevoir une copie des certificats pour la connexion SSL,
 
+Le démonstrateur repose sur un serveur Linux sous Fédora 29.
+Nous allons principalement utilisé des images sous Docker pour installer les différentes composantes de l'API. il faut 
+donc commencer par l'installer.
+
+On trouve beaucoup de tutoriel suivant le système d'exploitation. Pour linux la commande suivante 
+fonctionne sans intervention le plus souvent :
+
+`curl -sSL get.docker.com | sh`
+ 
+ puis on démarre le démon et on l'installe pour un démarage automatique 
+ 
+ `systemctl start docker && systemctl enable docker`
+
+Normalement docker est installé.  
 
 # Sécurisation
-## du serveur
-Notamment pour des raisons de référencement, l'usage de l'https est de plus en plus courrant. 
-Cela implique que les api utilisées par les front-end sécurisés doivent également être sécurisé.
-Dans cet exemple on va utilise des certificats Let's Encrypt.
+L'api peut fonctionner sur un serveur non sécurisé. Dans ce cas, le chapitre qui suit
+est optionnel.
+## ... du serveur
+L'usage de l'https pour héberger les sites est de plus en plus courant. 
+Cela implique que les api utilisées par les front-end sécurisés doivent également utilisé le protocol 'https'
+On doit donc mettre en place des certificats SSL et interogger le serveur 
+via son nom de domaine. Dans cet exemple on va utilise des certificats "Let's Encrypt".
 
-Vous devez paramétrer le DNS de votre domaine pour le faire pointer vers
-votre serveur. La procédure dépend de votre fournisseur de nom de domaine. 
+Vous devez paramétrer le DNS de votre domaine pour le faire pointer vers l'adresse IP de
+votre serveur. Le principe consiste 
+à ajouter un "enregistrement A" au DNS du nom de domain.
+La procédure pas à pas dépend de votre fournisseur de nom de domaine et est souvent détaillée dans les FAQ.
+On peut également consulter :  
+- https://blog.youdot.io/fr/4-types-enregistrements-dns-a-connaitre/
+- https://docs.icodia.com/general/zones-dns
 
-Puis, sur le serveur qui hébergera l'api, on récupère "certbot" qui automatise la procédure
-d'installation des certificats.
+Il faut maintenant fabriquer les certificats.
+Sur le serveur qui hébergera l'api, on récupère "certbot" qui automatise la procédure
+d'installation des certificats via la commande :
 
 `apt-get -t jessie-backports install certbot`
 
@@ -64,15 +87,19 @@ puis on lance la fabrication des certificats :
 `certbot certonly --standalone -d sub.domaine.com` 
 en remplacant sub.domain.com par votre domaine. Si tout se passe bien, vous récupèrez
 plusieurs fichiers dans le répertoire /etc/letsencrypt/live/<sub.domain.com>
+
 Pour établir une connexion sécurisée avec Flask on utilise deux de ces fichiers :
 "fullchain.pem" et "privkey.pem". 
 
-Copiés dans le repertoire /root/certs ils seront accessible à notre serveur Flask :
+Ils sont copiés dans le repertoire /root/certs pour être accessible à notre serveur Flask :
+
 `mkdir /root/certs && cp /etc/letsencrypt/live/sub.domain.com/* /root/certs`
+
 
 ## de l'api
 Flask permet l'ajout d'une couche de sécurité via l'usage de token pour identifier 
 les utilisateurs.
+
 Pour aller plus loin, en particulier si l'on souhaite commercialisé l'api, il est souhaitable
 d'installer une solution de gestion d'API (API management). On trouve plusieurs produits pour faire cela
 Certains propriétaires d'autre Open source comme le montre cet article : 
@@ -82,36 +109,49 @@ Certains propriétaires d'autre Open source comme le montre cet article :
 
 
 # La base de données
-## MongoDB
-La base de données est utilsée comme cache pour stocker les réponses aux requêtes. 
-On aurait pu utiliser des techniques plus légère ou des bases de données plus simple
+
+L'objectif de l'article est également de montrer un exemple d'implémentation d'une base de données puissante dans une 
+API Python. Pour cette raison on installe MongoDB.
+
+On aurait pu utiliser des techniques plus légères ou des bases de données plus simple
 que MongoDB mais l'objectif est d'illustrer l'usage d'une base moderne
  - opérationnelle pour le big data,
  - compatible avec l'<a href="https://www.datacamp.com/courses/introduction-to-using-mongodb-for-data-science-with-python">analyse de données</a>,
  - hautement scalable.
 
+
 ## Installation
 Pour ne pas compliquer le processus d'installation, on choisie d'utiliser MongoDB
 via son image "docker" : https://hub.docker.com/_/mongo
 
-Si l'on part d'un serveur vierge, il faut commencer par installer Docker.
-On trouve beaucoup de tutoriel suivant le système d'exploitation. Pour linux la commande suivante 
-fonctionne sans intervention le plus souvent :
-
-`curl -sSL get.docker.com | sh && systemctl start docker && systemctl enable docker`
-
-Docker étant maintenant disponible l'installation de la base est particulierement simple :
+Rien de plus simple :
 
 `docker run --restart=always -v /root/mongodata:/data/db -d -p 27017-27019:27017-27019 --name mongodb -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=admin_password mongo`
 
 ## Remarques
-On aurait pû utiliser
-- un autre port que le port standard : 27017 
-- un autre couple (user / mot de passe) que (admin / admin_password)
-- il est possible de se connecter via Mongo Compass pour visionner le contenu de la base
+Il faut retenir que 
+- l'écriture dans la base depuis l'API se fera avec le user/mot de passe : admin/admin_password
+- la base est disponible sur le port 27017
+- il est possible de se connecter via Mongo Compass pour visionner le contenu notre base depuis n'importe quel
+poste dès lors qu'on utilise bien les paraméètres de connexion ci-dessus
+
+# L'api
+## Principe
+L'API est avant tout un prétexte pour illustrer l'architecture, pour autant elle pourrait servir de 
+point de départ à un moteur de recherche d'images comme alternative à un google image.
+Elle recoit en paramètre un mot clé et interroge deux plateformes de référencement de photo : PixaBay
+et Unsplash. Les résultats sont concaténés et renvoyer au front-end sous forme d'une suite d'URL.
+
+## Fichier de configuration
+Dans une optique d'industrialisation, les paramètres du serveur sont regroupés 
+dans une fichier YAML. <br>
+Même si ce format est moin courant que json, on gagne en lisibilité et surtout YAML supporte les commentaires. 
+
+##Principale fonction mise en oeuvre
+
 
 # Installation du serveur
-Il est temps d'installer l'API. Là aussi, l'usage de Docker simplifie le déploiement à l'extrème. 
+Il est temps d'installer l'API. Là aussi, l'usage de Docker simplifie le déploiement. 
 Ainsi, l'installation de notre serveur flask se fait par la commande :
 
 `docker pull f80hub/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d f80hub/picturesearchenginex86:latest localhost admin admin_password 5600 ssl`
@@ -127,19 +167,6 @@ grâce à cette commande on a :
 (il est possible de lancer l'api en mode non sécurisé en enlenvant le paramèttre ssl. Dans ce cas, 
 l'étape de fabrication des certificats n'est pas nécéssaire et l'api peut être jointe directement via
 l'adresse IP du serveur) 
-
-# Fichier de configuration
-Dans une optique d'industrialisation, les paramètres du serveur sont regroupés 
-dans une fichier YAML. <br>
-Même si ce format est moin courant que json, on gagne en lisibilité
-mais surtout YAML supporte les commentaires. 
-
-
-# Fonctionnement de l'API
-L'API est avant tout un prétexte pour illustrer l'architecture, pour autant elle pourrait servir de 
-point de départ à un moteur de recherche d'images comme alternative à un google image.
-Elle recoit en paramètre un mot clé et interroge deux plateformes de référencement de photo : PixaBay
-et Unsplash. Les résultats sont concaténés et renvoyer au front-end sous forme d'une suite d'URL.
 
 Préalablement, le Front-End envoie un user et un mot de passe et recoit en échange un token temporaire.
 Cette mécanique est mise en oeuvre, sur le serveur, par la librarie Flask-JWT selon le principe 
