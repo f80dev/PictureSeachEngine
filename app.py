@@ -91,7 +91,7 @@ class Image(Resource):
         #Chaque requête est enregistrée pour la gestion des quotas et d'une éventuelle facturation
         dao.write_query(query,request.headers["access_token"])
 
-        return jsonify(rc)
+        return jsonify(rc),200,{'Access-Control-Allow-Origin':'*'}
 
 
 
