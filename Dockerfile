@@ -1,5 +1,5 @@
 #installation et démarrage de docker
-#sudo curl -sSL get.docker.com | sh && systemctl start docker
+#sudo curl -sSL get.docker.com | sh && systemctl start docker && systemctl enable docker
 
 #Construction et déploiement du container de l'application x86
 #docker build -t f80hub/picturesearchenginex86 . & docker push f80hub/picturesearchenginex86:latest
