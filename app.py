@@ -1,38 +1,60 @@
 import ssl
 import sys
-import flask_jwt
-from flask_jwt import jwt_required, JWT
-from flask_restplus import Resource, Api,reqparse
+from flask_restplus import Resource, Api, reqparse
 from flask_cors import CORS
 
 import dao
-import user
-import tools
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+from tools import token_required, createToken, settings, queryUnsplash, queryPixabay
 
 app = Flask(__name__)
 CORS(app)
-app.config['SECRET_KEY'] = 'hh4280!!'
-api = Api(app)
+
+authorizations={
+    "apikey":{
+        "type":"apiKey",
+        "in":"header",
+        "name":"access_token"
+    }
+}
+
+api = Api(app,authorizations=authorizations)
 dao=dao.dao(sys.argv[2],sys.argv[3],sys.argv[4])
 
-#Fixer les paramétres du parser
-parser = reqparse.RequestParser()
-parser.add_argument('limit', type=int, help='Images return')
-parser.add_argument('quality', type=bool, help='Best quality')
 
-def authenticate(username, password):
-    return user.User(tools.getUser(username=username,password=password))
+#Fonctions de gestion des token ________________________________________________________________
 
-def identity(payload):
-    return tools.getUser(id=payload['identity'])
+#def authenticate(username, password):
+#    return user.User(tools.getUser(username=username,password=password))
+
+#def identity(payload):
+#    return tools.getUser(id=payload['identity'])
+
+#Mise en place des fonctions
+#jwt = JWT(app, authorizations, identity)
+
 
 #http://localhost:8090/index.html?server=http://localhost&port=5800
 
-jwt = JWT(app, authenticate, identity)
+auth_parser = reqparse.RequestParser()
+auth_parser.add_argument('username', required=True,type=str, help='username to use the API')
+auth_parser.add_argument('password', required=True,type=str, help='password to use the API')
+@api.route("/auth")
+class Developer(Resource):
+    @api.expect(auth_parser)
+    @api.doc(responses={200: 'Access token correspondant'})
+    def get(self):
+        args = auth_parser.parse_args()
+        return jsonify(dict({"access_token":createToken(args["username"],args["password"])}))
 
-@api.route("/"+tools.settings("api")["endpoint"]+"/<string:query>")
+#Paramétrage des API _________________________________________________________________________
+#Fixer les paramétres du parser
+parser = reqparse.RequestParser()
+parser.add_argument('limit', type=int, help='Number of images return')
+parser.add_argument('quality', type=bool, help='Ask for best quality')
+@api.route("/<string:query>",endpoint=settings("api")["endpoint"])
 @api.doc(params={'query': "Requête pour intérroger les bases de données d'image"})
+@api.doc(security="apikey")
 class Image(Resource):
     @api.doc(responses={
         200: 'Liste des urls des photos correspondant à la requête',
@@ -40,19 +62,19 @@ class Image(Resource):
     })
 
     @api.expect(parser)
-    @jwt_required()
+    @token_required
     def get(self,query):
         args = parser.parse_args() #va nous permettre de parser automatiquement les paramètres
 
         #Ici on appel le service pixabay pour récupérer des images
-        rc=tools.queryPixabay(query,args["limit"],args["quality"])
+        rc=queryPixabay(query,args["limit"],args["quality"])
 
         #On ajoute les images de unspash
-        for pict in tools.queryUnsplash(query):
+        for pict in queryUnsplash(query):
             rc.append(pict)
 
         #Chaque requête est enregistrée pour la gestion des quotas et d'une éventuelle facturation
-        dao.write_query(query,flask_jwt.current_identity)
+        dao.write_query(query,request.headers["access_token"])
 
         return jsonify(rc)
 

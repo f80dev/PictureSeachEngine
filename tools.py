@@ -1,6 +1,9 @@
 import urllib
 import yaml
-from flask import json
+from flask import json, request
+import jwt
+from functools import wraps
+
 
 #Fonction de récupération des paramètres du serveur
 def settings(field=""):
@@ -12,7 +15,7 @@ def settings(field=""):
 
 
 #retourne un user par le username et password
-def getUser(username="",password="",id=""):
+def getUser(username:str="",password:str="",id=""):
     for c in settings("api_users"):
         if len(username)>0 and len(password)>0:
             if c["username"]==username and password==c["password"]:return c
@@ -52,3 +55,35 @@ def queryUnsplash(query):
         rc.append(image["urls"]["raw"])
 
     return rc
+
+
+
+#Gestion des token _____________________________________________________________________________________________________
+#Décorateur pour s'assurer que le token est présent dans l'API décorée
+def token_required(f):
+    @wraps(f)
+    def decorated(*args,**kwargs):
+        token=None
+
+        if 'access_token' in request.headers:
+            token=request.headers["access_token"]
+            json=decodeToken(token)
+            #On vérifie que le couple (user,password) est présent dans le fichier de configuration
+            #On aurait pu aussi utiliser un base de données
+            if getUser(username=json["username"],password=json["password"]) is None:
+                return {"message": "token unknown"}, 401
+
+        if not token:
+            return {"message":"token is missing"},401
+
+        return f(*args,**kwargs)
+
+    return decorated
+
+#Création d'un token contenant un user / mot de passe
+def createToken(username:str,password:str):
+    return str(jwt.encode({'username': username,'password':password}, 'mon_super_secret', algorithm='HS256'),"utf-8")
+
+#Décodage du token créer par createToken
+def decodeToken(token:str):
+    return jwt.decode(token, 'mon_super_secret', algorithms=['HS256'])

@@ -78,16 +78,12 @@
      * @param func fonction de callback
      */
     function getToken(domain,username,password,func){
-        fetch(domain+"/auth",{
-                method:'POST',
+        fetch(domain+"/auth?username="+username+"&password="+password,{
+                method:'GET',
                 headers: new Headers({
                     "Content-Type":"application/json",
                     "Cache-Control":"no-cache",
                     "Accept":"*/*"
-                }),
-                body:JSON.stringify({
-                    "username":username,
-                    "password":password
                 })
             }).then((r)=>{
                 r.json().then((result)=>{func(result.access_token);})

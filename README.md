@@ -1,21 +1,29 @@
 # PSE - Picture Search Engine
 Le Picture Search Engine est un méta-moteur de recherche d'image de qualité, open source.
+L'objectif du projet est d'illustrer une architecture client/serveur reposant sur un framework
+de type micro-services securisés.
 
 # Objectif
-L'objectif de ce projet est d'illustrer la mise en oeuvre de plusieurs technologies reconnues
+Ce projet est met en oeuvre plusieurs technologies reconnues
  comme références dans leur domaine pour la réalisation d'une architecture sécurisée de type micro-services. 
  
- Ainsi on combine plusieurs technologies de pointes :
+ On décompose la solution en 2 briques : le front-end et le back-end
+ 
 Pour le backend :
 - le langage python, dont le nombre de bibliothéque garantit de pouvoir s'attaquer 
-à tout type de domaine d'activité avec une prédisposition pour la data et l'intelligence artificiel
-- le framework Flask d'architectures micro-services, dotés de nombreux 
-plugin et apportant tout les avantages de ce type d'architecture
-- l'usage d'une base de données open-source et NoSQL : MongoDB, calibré pour le big data,
-- la containerisation via Docker garantissant la scalabilité de l'ensemble 
-- l'utilisation d'une librairie de génération automatique de documentation pour l'API
+à tout type de domaine d'activité avec une prédisposition pour la data et l'intelligence artificiel, est utilisé pour coder
+notre API
+- le framework d'architectures micro-services Flask, dotés de nombreux plugin pour faciliter la réalisation d'API performantes
+et sécurisées 
+- l'usage d'une base de données open-source et NoSQL : MongoDB, calibrée pour le big data,
+- la containerisation via Docker simplifiant le déploiement et garantissant la scalabilité de l'ensemble 
+- l'utilisation du plugin Flask-Restplus pour génération automatique de la documentation de l'API et d'un outil de test
 - la sécurisation et le suivi (et l'éventuelle facturation) de l'usage de l'API via la gestion de token d'accès
-- sécurisation du serveur via l'usage d'un certificat gratuit Let's Encrypt
+- la sécurisation du serveur via l'usage d'un certificat gratuit Let's Encrypt
+
+Le front-end est, pour l'instant, sous forme 
+- d'une page HTML minimale pour interroger
+- d'une interface d'interrogation de l'API via Swagger UI 
 
 Dans un second article, nous développerons le front-end:
 - sous format d'une Progressive Web App multi-devices (vs un développement pour chaque plateforme),
@@ -23,10 +31,9 @@ Dans un second article, nous développerons le front-end:
 - hébergé gratuitement grâce aux github page.
 
 # Démonstration
-Pour l'instant une interface minimal est accessible directement à l'adresse : https://pse.f80.fr
+L'interface minimal est accessible directement à l'adresse : https://pse.f80.fr
 La documentation de l'API auto-générée par l'extension 
 RestPlus est disponible sur : https://server.f80.fr:5800 
-
 
 
 # Configuration du serveur
@@ -37,7 +44,9 @@ Ainsi le répertoire /root va héberger :
 - un sous répertoire "data" destiné à stocker la base MondoDB
 - un sous répertoire "certs" va recevoir une copie des certificats pour la connexion SSL
 
-# Sécurisation du serveur
+
+# Sécurisation
+## du serveur
 Notamment pour des raisons de référencement, l'usage de l'https est de plus en plus courrant. 
 Cela implique que les api utilisées par les front-end sécurisés doivent également être sécurisé.
 Dans cet exemple on va utilise des certificats Let's Encrypt.
@@ -60,6 +69,16 @@ Pour établir une connexion sécurisée avec Flask on utilise deux de ces fichie
 
 Copiés dans le repertoire /root/certs ils seront accessible à notre serveur Flask :
 `mkdir /root/certs && cp /etc/letsencrypt/live/sub.domain.com/* /root/certs`
+
+## de l'api
+Flask permet l'ajout d'une couche de sécurité via l'usage de token pour identifier 
+les utilisateurs.
+Pour aller plus loin, en particulier si l'on souhaite commercialisé l'api, il est souhaitable
+d'installer une solution de gestion d'API (API management). On trouve plusieurs produits pour faire cela
+Certains propriétaires d'autre Open source comme le montre cet article : 
+<a href="https://techbeacon.com/app-dev-testing/you-need-api-management-help-11-open-source-tools-consider">11 open-source tools to consider</a>
+
+
 
 
 # La base de données
@@ -129,10 +148,11 @@ des JSON Web Token (https://fr.wikipedia.org/wiki/JSON_Web_Token).
 Dans l'exemple aucune interface d'enregistrement des développeurs n'est proposées. Pour aurtant 
 
 
-
 # Remarque divers
-Le code est abondamment documenté. Via RestPlus on génére
-automatiquement une documentation pour notre API
+Le code est abondamment documenté. 
+
+Via RestPlus on génére automatiquement une documentation pour notre API
+
 
 
 # Front-end de tests
