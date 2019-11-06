@@ -29,7 +29,11 @@ class dao:
         :param password:
         :return: NA
         """
-        self.db["users"].insert_one(dict({"username":username,"password":password}))
+        user:=dict({
+            "username":username,
+            "password":password
+        })
+        self.db["users"].insert_one(user)
 
     def get_user(self,token):
         """

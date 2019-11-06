@@ -1,54 +1,58 @@
 # PSE - Picture Search Engine
-Le Picture Search Engine est un méta-moteur de recherche d'image de qualité, open source.
-L'objectif du projet est d'illustrer une architecture client/serveur reposant sur un framework
+Le Picture Search Engine est un méta-moteur open source de recherche de photos de qualitées.
+L'objectif du projet est surtout d'illustrer une architecture client/serveur reposant sur un framework
 de type micro-services securisés.
 
 # Objectif
-Ce projet est met en oeuvre plusieurs technologies reconnues
- comme références dans leur domaine pour la réalisation d'une architecture sécurisée de type micro-services. 
+Ce projet est met en oeuvre plusieurs technologies classiques mais éprouvées et donc "reconnues" 
+pour ce type d'architecture.
  
- On décompose la solution en 2 briques : le front-end et le back-end
+Pour détailler la solution, On la décompose en 2 briques : le front-end et le back-end
  
-Pour le backend :
-- le langage python, dont le nombre de bibliothéque garantit de pouvoir s'attaquer 
-à tout type de domaine d'activité avec une prédisposition pour la data et l'intelligence artificiel, est utilisé pour coder
-notre API
-- le framework d'architectures micro-services Flask, dotés de nombreux plugin pour faciliter la réalisation d'API performantes
-et sécurisées 
-- l'usage d'une base de données open-source et NoSQL : MongoDB, calibrée pour le big data,
-- la containerisation via Docker simplifiant le déploiement et garantissant la scalabilité de l'ensemble 
-- l'utilisation du plugin Flask-Restplus pour génération automatique de la documentation de l'API et d'un outil de test
-- la sécurisation et le suivi (et l'éventuelle facturation) de l'usage de l'API via la gestion de token d'accès
-- la sécurisation du serveur via l'usage d'un certificat gratuit Let's Encrypt
+Le backend :
+- est développé en python. C'est un langage moderne dont le nombre de bibliothéque garantit 
+de pouvoir s'attaquer à tout type de domaine d'activité 
+avec une prédisposition pour la data et l'intelligence artificiel,
+- l'API repose sur le framework d'architectures micro-services Flask. Il est dotés de nombreux 
+plugin pour faciliter la réalisation d'APIs performantes et sécurisées 
+- l'usage d'une base de données open-source et NoSQL : MongoDB, calibrée pour le big data avec une garantie
+de performence et de scalabilité.
+- la containerisation via Docker simplifiant le déploiement tout en permettant la scalabilité de l'ensemble 
+via des outils comme kubernetes,
+- l'utilisation du plugin Flask-Restplus permet de générer automatiquement une documentation de l'API 
+et un outil de test performant et simple,
+- la sécurisation, le suivi et l'éventuelle facturation de l'usage de l'API 
+via la gestion de token d'accès,
+- la sécurisation du serveur via l'usage d'un certificat SSL Let's Encrypt
 
-Le front-end est, pour l'instant, sous forme 
-- d'une page HTML minimale pour interroger
-- d'une interface d'interrogation de l'API via Swagger UI 
+Le front-end est, pour l'instant, sous forme d'une page HTML minimale pour utiliser l'API et 
+d'une interface d'interrogation de l'API via Swagger UI 
 
-Dans un second article, nous développerons le front-end:
-- sous format d'une Progressive Web App multi-devices (vs un développement pour chaque plateforme),
-- en typescript sur la dernière version du framework Angular,
-- hébergé gratuitement grâce aux github page.
+Dans un second article, nous développerons un front-end multi-device 
+- sous format Progressive Web App via Angular 8 (vs un développement spécifique pour chaque PS),
+- en typescript,
+- hébergé gratuitement sur les "github page".
 
 # Démonstration
 L'interface minimal est accessible directement à l'adresse : https://pse.f80.fr
-La documentation auto-générée par l'extension 
-RestPlus est disponible sur : https://server.f80.fr:5800 
-
+L'interface d'interrogation de l'API est disponible sur : https://server.f80.fr:5800 
 
 # Configuration du serveur
-A priori l'api peut être installé sur n'importe quel type d'OS supportant Python. Dans cet exemple, on se repose sur Linux 
+A priori l'api peut être installé sur n'importe quel type d'OS supportant Python. 
+Dans cet exemple, on utilise une distribution Linux : Fedora (v29)
 
-Pour faire simple, toute l'installation va se faire en mode root ce qui n'est pas conseillé en environnement de production.
+Pour faire simple, toute l'installation va se faire en mode root 
+ce qui n'est pas conseillé en environnement de production.
 Ainsi le répertoire /root va héberger :
-- un sous-répertoire "data" destiné à stocker la base MongoDB,
+- un sous-répertoire "mongodata" destiné à stocker la base MongoDB,
 - un sous-répertoire "certs" va recevoir une copie des certificats pour la connexion SSL,
 
-Le démonstrateur repose sur un serveur Linux sous Fédora 29.
-Nous allons principalement utilisé des images sous Docker pour installer les différentes composantes de l'API. il faut 
-donc commencer par l'installer.
+Nous allons principalement utilisé des images sous Docker 
+pour installer les différentes composantes du serveur. il faut 
+donc commencer par l'installer ce gestionnaire de containers.
 
-On trouve beaucoup de tutoriel suivant le système d'exploitation. Pour linux la commande suivante 
+On trouve beaucoup de tutoriel suivant le système d'exploitation. Pour linux, après s'être
+ connecté en mode root, la commande suivante 
 fonctionne sans intervention le plus souvent :
 
 `curl -sSL get.docker.com | sh`
@@ -57,11 +61,13 @@ fonctionne sans intervention le plus souvent :
  
  `systemctl start docker && systemctl enable docker`
 
-Normalement docker est installé.  
+Normalement docker est maintenant installé.  
 
 # Sécurisation
-L'api peut fonctionner sur un serveur non sécurisé. Dans ce cas, le chapitre qui suit
-est optionnel.
+L'étape suivante consiste à sécurisé le serveur pour permettre un appel de notre API via "https"
+L'api peut fonctionner sur un serveur non sécurisé. Dans ce cas, il n'est pas nécéssaire de mettre en 
+oeuvre le chapitre suivant. 
+
 ## ... du serveur
 L'usage de l'https pour héberger les sites est de plus en plus courant. 
 Cela implique que les api utilisées par les front-end sécurisés doivent également utilisé le protocol 'https'
@@ -77,52 +83,53 @@ On peut également consulter :
 - https://docs.icodia.com/general/zones-dns
 
 Il faut maintenant fabriquer les certificats.
-Sur le serveur qui hébergera l'api, on récupère "certbot" qui automatise la procédure
-d'installation des certificats via la commande :
+Sur le serveur qui hébergera l'api, on installe "certbot" en suivant les instructions du site: 
+https://certbot.eff.org/instructions
 
-`apt-get -t jessie-backports install certbot`
-
-puis on lance la fabrication des certificats :
-
+Cet outil automatise la procédure d'installation des certificats via la commande :
 `certbot certonly --standalone -d sub.domaine.com` 
-en remplacant sub.domain.com par votre domaine. Si tout se passe bien, vous récupèrez
+en remplacant sub.domain.com par votre domaine. 
+
+Si tout se passe bien, vous récupèrez
 plusieurs fichiers dans le répertoire /etc/letsencrypt/live/<sub.domain.com>
 
-Pour établir une connexion sécurisée avec Flask on utilise deux de ces fichiers :
-"fullchain.pem" et "privkey.pem". 
+Pour établir une connexion sécurisée avec Flask on utilise deux fichiers 
+produit par certbot : "fullchain.pem" et "privkey.pem". 
 
-Ils sont copiés dans le repertoire /root/certs pour être accessible à notre serveur Flask :
+Ils faut les rendre visible à l'image docker de notre serveur
+d'api. On va donc les copier dans le repertoire /root/certs:
 
 `mkdir /root/certs && cp /etc/letsencrypt/live/sub.domain.com/* /root/certs`
 
+Théoriquement, cette manipulation doit être réalisé chaque fois que l'on met
+à jour les certificats.
+on peut aussi choisir de faire point l'image docker directement sur le répertoire hébergent
+les certificats et mettre en place un renouvellement automatique (voir https://certbot.eff.org/docs/using.html?highlight=renew#renewing-certificates)
+
 
 ## de l'api
-Flask permet l'ajout d'une couche de sécurité via l'usage de token pour identifier 
-les utilisateurs.
+Flask permet l'ajout d'une couche de sécurité directement au niveau
+de l'API via l'usage de token pour identifier les utilisateurs (développeurs).
 
-Pour aller plus loin, en particulier si l'on souhaite commercialisé l'api, il est souhaitable
+Pour aller plus loin, en particulier si l'on souhaite commercialiser l'api, il est souhaitable
 d'installer une solution de gestion d'API (API management). On trouve plusieurs produits pour faire cela
-Certains propriétaires d'autre Open source comme le montre cet article : 
+Certains propriétaires d'autres Open source comme le détaille cet article : 
 <a href="https://techbeacon.com/app-dev-testing/you-need-api-management-help-11-open-source-tools-consider">11 open-source tools to consider</a>
+Dans notre cas, on va rester sur une gestion du token intégrer au serveur.
 
+La procédure d'obtention du token est réduite à sa plus simple expression, puisqu'il suffit
+d'appeler l'API "/auth" qui se charge d'enregistrer un username / password dans la base de données et de retourner 
+le token d'authentification. 
 
 # La base de données
-L'objectif de l'article est également de montrer un exemple d'implémentation d'une base de données puissante dans une 
-API Python. Pour cette raison on installe MongoDB.
-
-On aurait pu utiliser des techniques plus légères ou des bases de données plus simple
-que MongoDB mais l'objectif est d'illustrer l'usage d'une base moderne
- - opérationnelle pour le big data,
- - compatible avec l'<a href="https://www.datacamp.com/courses/introduction-to-using-mongodb-for-data-science-with-python">analyse de données</a>,
- - hautement scalable.
-
+L'objectif de l'article est également de montrer un exemple d'implémentation d'une 
+base de données puissante dans l'univers Python. Pour cette raison on installe MongoDB.
 
 ## Installation
 Pour ne pas compliquer le processus d'installation, on choisie d'utiliser MongoDB
 via son image "docker" : https://hub.docker.com/_/mongo
 
 Rien de plus simple :
-
 `docker run --restart=always -v /root/mongodata:/data/db -d -p 27017-27019:27017-27019 --name mongodb -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=admin_password mongo`
 
 ## Remarques
@@ -131,6 +138,12 @@ Il faut retenir que
 - la base est disponible sur le port 27017
 - il est possible de se connecter via Mongo Compass pour visionner le contenu notre base depuis n'importe quel
 poste dès lors qu'on utilise bien les paraméètres de connexion ci-dessus
+
+## Usage
+La librairie Python utilisé pour interragir avec MongoDB et PyMongo. MongoDB est une base orientée document.
+Les enregistrements sont donc des dictionnaires python. On utilise 2 types d'objets.
+Les utilisateurs des API ont la structure suivante :
+
 
 # L'api
 ## Principe
