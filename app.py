@@ -14,12 +14,7 @@ Fonctions principales d'exécution des API
 """
 Structure du token d'identification
 """
-authorizations={
-    "apikey":{
-        "type":"apiKey",
-        "in":"header",
-        "name":"access_token"
-    }
+authorizations={"apikey":{"type":"apiKey","in":"header","name":"access_token"}
 }
 
 """
@@ -28,7 +23,6 @@ Initialisation du moteur d'execution de l'API
 app = Flask(__name__)
 CORS(app)
 api = Api(app,authorizations=authorizations)
-
 """
 Instanciation de la couche de données
 Les paramètres seront passés à l'installation de l'image Docker
@@ -36,10 +30,7 @@ Les paramètres seront passés à l'installation de l'image Docker
 dao=dao.dao(sys.argv[2],sys.argv[3],sys.argv[4])
 
 #http://localhost:8090/index.html?server=http://localhost&port=5800
-
-""""
-Mise en place de l'API d'obtention du token sur base d'un couple user/mot de passe_____________________________________
-"""
+#Mise en place de l'API d'obtention du token sur base d'un couple user/mot de passe_____________________________________
 auth_parser = reqparse.RequestParser()
 auth_parser.add_argument('username', required=True,type=str, help='username to use the API')
 auth_parser.add_argument('password', required=True,type=str, help='password to use the API')
