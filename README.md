@@ -142,7 +142,8 @@ et Unsplash. Les résultats sont concaténés et renvoyer au front-end sous form
 ## Fichier de configuration
 Dans une optique d'industrialisation, les paramètres du serveur sont regroupés 
 dans une fichier YAML. <br>
-Même si ce format est moin courant que json, on gagne en lisibilité et surtout YAML supporte les commentaires. 
+Même si ce format est moin courant que json, on gagne en lisibilité 
+et surtout on profite ainsi de la possibilité d'ajouter des commentaires. 
 
 ##Principale fonction mise en oeuvre
 Le code est abondamment commenté, donc facilement adaptable.
@@ -155,37 +156,51 @@ de l'interrogation des plateformes de photos.
 des résultats des deux fonctions précédentes
 
 ### La gestion des API
-Les fonctions du module "tools.py" s'occupe 
-- de la gestion des token (encodage et décodage)
+La configuration des API, route et parsing des paramètres en particulier, est assuré par RestPlus via
+- la classe Image qui par, l'héritage de la classe ressource, fonctionne suivant les préceptes REST.
+- les décorateurs app.route, indiquant les routes pour l'appel des apis.
 
-### La base de donénes
+La gestion des token, encodage et décodage est assuré par les fonctions createToken et decodeToken
+Le décorateur token_required vérifie la présence du token dans les API. Il reçoit l'instance de 
+la base de données comme paramètre et peut ainsi récupérer le compte développeur et par exemple,
+vérifier les quotas et / ou les droits avant d'autoriser l'exécution.
+
+### La base de donnéns
 La base de données est prise en charge par la classe DAO ("dao.py") qui fait 
 l'interface avec la base de données, pour 
+- ouvrir la connexion avec la base MongoDB via son constructeur,
 - gérer les utilisateurs des api, (inscription et récupération des droits)
-- tracer l'ensemble des transactions (écriture en base du token et de la date) donnant ainsi la possibilité
-de gestion de quotas et d'une eventuelle facturation 
+- tracer l'ensemble des transactions (écriture en base du token et de la date) ouvrant ainsi la possibilité
+d'une gestion de quotas et d'une éventuelle facturation 
 
 
 # Déploiement
-Il est temps d'installer l'API. Là aussi, l'usage de Docker simplifie le déploiement. 
+Là aussi, l'usage de Docker simplifie le déploiement de notre API.
+
+## Fabrication de l'image
+L'idéal est de commencer par s'inscrire sur le <a href='https://hub.docker.com/'>hub docker</a> 
+afin de disposer d'un espace susceptible de recevoir
+l'image Docker de l'API. 
+
 une fois le code finaliser, le fichier "Dockerfile" permet la construction d'une image
 déployable du serveur d'API.
 
 La commande pour construire l'image et la rendre disponible sur le hub docker est simple :
 `docker build -t <votre_hub>/picturesearchenginex86 . & docker push <votre_hub>/picturesearchenginex86:latest`
-ou <votre_hub> est remplacé par votre compte sur le portail.
+ou <votre_hub> est à remplacer par votre compte.
 
-Ainsi, l'installation de notre serveur flask se fait par la commande :
+## Installation de l'image
+Ainsi, l'installation de l'API se fera par la commande :
+`docker pull <votre hub>/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d <votre hub>/picturesearchenginex86:latest localhost admin admin_password 5600 ssl`
 
+Vous pouvez également récupérer l'image sur mon hub par 
 `docker pull f80hub/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d f80hub/picturesearchenginex86:latest localhost admin admin_password 5600 ssl`
 
 grâce à cette commande on a :
-- télécharger l'image picturesearchenginex86 fabriqué préalablement par la commande :
-`docker build -t f80hub/picturesearchenginex86 . & docker push f80hub/picturesearchenginex86:latest`
-
-- programmer le rédémarrage automatique de l'API lorsque le serveur redémarre,
-- ouvert l'accès aux certificats pour permettre a Flask de sécuriser les transactions
-- ouvert le port 5600 pour la communication a notre API
+- télécharger l'image picturesearchenginex86 fabriquée préalablement,
+- programmer le rédémarrage automatique de l'API lorsque le serveur redémarre (restart),
+- ouvert l'accès aux certificats pour permettre a Flask de sécuriser les transactions (-v)
+- ouvert le port 5600 pour la communication a notre API (-p)
 - enfin en terminant par "ssl" on configure l'API en mode sécurisé
 (il est possible de lancer l'api en mode non sécurisé en enlenvant le paramèttre ssl. Dans ce cas, 
 l'étape de fabrication des certificats n'est pas nécéssaire et l'api peut être jointe directement via
@@ -200,8 +215,9 @@ Dans l'exemple aucune interface d'enregistrement des développeurs n'est propos�
 
 # Remarque divers
 Le code est abondamment documenté. 
-Via RestPlus on génére automatiquement une documentation pour notre API
-
+Via RestPlus on génére automatiquement une documentation Swagger et 
+une interface d'utilisation pour notre API
+Via Sphinx, on produit la documentation de notre code suivant les standards Python. 
 
 
 # Front-end de tests
