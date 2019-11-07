@@ -73,7 +73,7 @@ L'usage de l'https pour héberger les sites est de plus en plus courant.
 Cela implique que les api utilisées par les front-end sécurisés doivent 
 également utilisé le protocol 'https'. 
 Pour autant on peut faire fonctionner l'API PSE sur un serveur non sécurisé. 
-Dans ce cas, vous pouvez directement passez au chapitre suivant.
+Dans ce cas, vous pouvez directement passez au chapitre suivant. 
 
 l'usage https nécessite 
  - la mise en place de certificats SSL,
