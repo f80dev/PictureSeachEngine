@@ -1,6 +1,6 @@
 api:
   server: https://home.f80.fr
-  endpoint: /api
+  endpoint: /api/images
 
 sources:
   pixabay:

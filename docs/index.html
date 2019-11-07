@@ -48,9 +48,11 @@
         <a href="https://www.linkedin.com/in/hhoareau/">Hervé HOAREAU</a>
     </td>
     <td>
-        <a href="https://">Interface API</a>
-        <br>
-        <a href="https://github.com/f80dev/PictureSeachEngine"><img src="github.png" style="width:100px"></a>
+        <a id="api_ihm" target="_blank">Interface API</a>
+        <br><br>
+        <a href="https://github.com/f80dev/PictureSeachEngine">
+            <img src="github.png" style="width:100px">
+        </a>
     </td>
 </tr></table>
 
@@ -92,6 +94,7 @@
     var port=getParams().port || 5800;
     var endpoint=getParams().endpoint || "/api";
     var url=server+":"+port;
+    document.getElementById("api_ihm").href=url;
     var token=null;
     if(!url.startsWith("http"))url="http://"+url;
     getToken(url,"demo","demo_password",(t)=> {
