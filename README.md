@@ -1,7 +1,5 @@
 # PSE - Picture Search Engine
-Le Picture Search Engine est un méta-moteur open source de recherche de photos de qualitées.
-L'objectif du projet est surtout d'illustrer une architecture client/serveur reposant sur un framework
-de type micro-services securisés.
+Le Picture Search Engine est un méta-moteur, open source, de recherche de photos de qualitées.
 
 # Objectif du projet
 L'objectif de ce projet est de combiner plusieurs technologies éprouvées et reconnues pour 
@@ -33,11 +31,6 @@ il doit être porté dans un second temps vers un front-end multi-device
 - sous format Progressive Web App via Angular 8,
 - en typescript,
 - hébergé gratuitement sur les "github page".
-
-# Démonstrateur
-Un démonstrateur est disponible en ligne.
-- L'interface minimal est accessible directement à l'adresse : https://pse.f80.fr
-- L'interface d'interrogation de l'API est disponible sur : https://server.f80.fr:5800 
 
 # Configuration du serveur de l'API
 A priori l'api peut être installée sur n'importe quel type d'OS supportant Python. 
@@ -142,6 +135,7 @@ Rien de plus simple :
 ## Remarques
 Il faut retenir que 
 - l'écriture dans la base depuis l'API se fera avec le user/mot de passe : admin/admin_password
+- la base n'est pas nécéssairement installé sur le même serveur que l'API
 - la base est disponible sur le port 27017
 - il est possible de se connecter via Mongo Compass pour visionner le contenu notre base depuis n'importe quel
 poste dès lors qu'on utilise bien les paraméètres de connexion ci-dessus
@@ -166,38 +160,44 @@ Même si ce format est moin courant que json, on gagne en lisibilité
 et surtout on profite ainsi de la possibilité d'ajouter des commentaires. 
 
 ##Principale fonction mise en oeuvre
-Le code est abondamment commenté, donc facilement adaptable.
+Le code est abondamment commenté, donc facilement adaptable / "forkable".
 
 On peut le décomposer en plusieurs blocs :
-###Le fonctionnement des API
+### Le fonctionnement des API
 - les fonctions queryUnsplash et queryPixabay ("tools.py") se chargent 
-de l'interrogation des plateformes de photos.
-- La ressource Image dont l'API "get" se charge de la consolidation 
+de l'interrogation des plateformes de photos. Elles nécessitent un enregistrement préalable sur leur portail
+développeurs afin d'y récupérer des clés d'usage. Voir https://pixabay.com/api/docs/ et 
+https://unsplash.com/developers. Ces clés doivent être inscrites dans le fichier settings.yaml du projet
+
+- La ressource "Image" dont l'API "get" se charge de la consolidation 
 des résultats des deux fonctions précédentes
 
-### La gestion des API
+### La gestion des API : app.py
 La configuration des API, route et parsing des paramètres en particulier, est assuré par RestPlus via
 - la classe Image qui par, l'héritage de la classe ressource, fonctionne suivant les préceptes REST.
 - les décorateurs app.route, indiquant les routes pour l'appel des apis.
+- le parser, se charge de décomposer les paramètres et contribue à produire la documentation pour swagger
 
-La gestion des token, encodage et décodage est assuré par les fonctions createToken et decodeToken
+### Authentification des appels à l'API : tools.py 
+La gestion des tokens d'authentification, en particulier encodage et décodage, 
+est assuré par les fonctions createToken et decodeToken
 Le décorateur token_required vérifie la présence du token dans les API. Il reçoit l'instance de 
 la base de données comme paramètre et peut ainsi récupérer le compte développeur et par exemple,
 vérifier les quotas et / ou les droits avant d'autoriser l'exécution.
 
-### La base de donnéns
-La base de données est prise en charge par la classe DAO ("dao.py") qui fait 
-l'interface avec la base de données, pour 
+### La base de données : dao.py
+La base de données est prise en charge par la classe DAO qui fait 
+l'interface entre MongoDB et l'API, pour 
 - ouvrir la connexion avec la base MongoDB via son constructeur,
-- gérer les utilisateurs des api, (inscription et récupération des droits)
-- tracer l'ensemble des transactions (écriture en base du token et de la date) ouvrant ainsi la possibilité
+- gérer les utilisateurs des api, (inscription et lecture dans la base pour confirmer la possibilité d'utiliser l'API)
+- tracer l'ensemble des transactions (écritures à chaque appel, du token et de la date) ouvrant ainsi la possibilité
 d'une gestion de quotas et d'une éventuelle facturation 
 
 
-# Déploiement
+# Déploiement de l'API
 Là aussi, l'usage de Docker simplifie le déploiement de notre API.
 
-## Fabrication de l'image
+## Fabrication de l'image docker
 L'idéal est de commencer par s'inscrire sur le <a href='https://hub.docker.com/'>hub docker</a> 
 afin de disposer d'un espace susceptible de recevoir
 l'image Docker de l'API. 
@@ -205,55 +205,83 @@ l'image Docker de l'API.
 une fois le code finaliser, le fichier "Dockerfile" permet la construction d'une image
 déployable du serveur d'API.
 
-La commande pour construire l'image et la rendre disponible sur le hub docker est simple :
-`docker build -t <votre_hub>/picturesearchenginex86 . & docker push <votre_hub>/picturesearchenginex86:latest`
+La commande pour construire l'image est simple.
+
+`docker build -t <votre_hub>/picturesearchenginex86 .`  
+
+Elle doit être exécutée depuis le répertoire contenant le fichier "Dockerfile".
+puis on se connecte :
+
+`docker login`
+
+pour enfin, la mettre en ligne sur le hub docker 
+
+`docker push <votre_hub>/picturesearchenginex86:latest`
+
 ou <votre_hub> est à remplacer par votre compte.
 
-## Installation de l'image
-Ainsi, l'installation de l'API se fera par la commande :
-`docker pull <votre hub>/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d <votre hub>/picturesearchenginex86:latest localhost admin admin_password 5600 ssl`
 
-Vous pouvez également récupérer l'image sur mon hub par 
-`docker pull f80hub/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d f80hub/picturesearchenginex86:latest localhost admin admin_password 5600 ssl`
+## Installation de l'image
+Maintenant que notre image est disponible, on peut la récupérer et l'installer sur le serveur
+Ainsi, l'installation de l'API se fera par la commande :
+
+`docker pull <votre hub>/picturesearchenginex86:latest` 
+
+pour récupérer l'image puis
+
+`docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d <votre hub>/picturesearchenginex86:latest localhost admin admin_password 5600 ssl` 
 
 grâce à cette commande on a :
-- télécharger l'image picturesearchenginex86 fabriquée préalablement,
-- programmer le rédémarrage automatique de l'API lorsque le serveur redémarre (restart),
-- ouvert l'accès aux certificats pour permettre a Flask de sécuriser les transactions (-v)
+- téléchargé l'image picturesearchenginex86 fabriquée préalablement,
+- programmé le rédémarrage automatique de l'API lorsque le serveur redémarre (restart),
+- ouvert l'accès aux certificats pour permettre à Flask de sécuriser les transactions (-v)
 - ouvert le port 5600 pour la communication a notre API (-p)
+
+Les derniers termes de la commande sont directement "passés" comme paramètres a l'API (récupérer par sys.args en python):
+- Ainsi, les paramètres de connexion à la base de données sont transmit à l'installation de l'image dans la commande docker. Ici
+on a passé "localhost" en considérant que l'API et la base sont sur le même serveur et "admin"/"admin_password" comme
+utilisateur / password pour se connecter à la base
 - enfin en terminant par "ssl" on configure l'API en mode sécurisé
 (il est possible de lancer l'api en mode non sécurisé en enlenvant le paramèttre ssl. Dans ce cas, 
 l'étape de fabrication des certificats n'est pas nécéssaire et l'api peut être jointe directement via
 l'adresse IP du serveur) 
 
-Préalablement, le Front-End envoie un user et un mot de passe et recoit en échange un token temporaire.
-Cette mécanique est mise en oeuvre, sur le serveur, par la librarie Flask-JWT selon le principe 
-des JSON Web Token (https://fr.wikipedia.org/wiki/JSON_Web_Token).
-
-Dans l'exemple aucune interface d'enregistrement des développeurs n'est proposées. Pour aurtant 
-
 
 # Remarque divers
-Le code est abondamment documenté. 
-Via RestPlus on génére automatiquement une documentation Swagger et 
-une interface d'utilisation pour notre API
-Via Sphinx, on produit la documentation de notre code suivant les standards Python. 
+
+- Il est possible de récupérer l'image utilisée par le démonstrateur en exécutant, sur le serveur :
+
+`docker pull f80hub/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d f80hub/picturesearchenginex86:latest localhost admin admin_password 5600 ssl`
+ 
+- Via RestPlus on génére automatiquement une documentation Swagger et 
+une interface d'utilisation pour notre API 
 
 
-# Front-end de tests
-Pour tester notre API, nous avons développé une page HTML contenant un code minimal javascript
-pour 
-- demander un token d'utilisation de l'API
-- utiliser le token obtenue pour interroger l'API
-- afficher le résultat
+# Démonstrateur
+Un démonstrateur est disponible en ligne via une interface minimal, 
+accessible directement à l'adresse : https://pse.f80.fr
 
-Dans un prochain article, nous remplacerons ce fichier par une web application développée sur Angular 
+## le mini front-end
+Elle se charge de :
+- demander un token d'utilisation de l'API,
+- demander le mot clé de la recherche,
+- appeler l'API avec le mot clé et le token,
+- afficher le résultat.
 
+Dans un prochain article, nous remplacerons ce fichier par une web application développée sur Angular.
 
+## L'interface swagger
+Grâce à RestPlus on dispose également d'une interface d'interrogation de l'API 
+sur : https://server.f80.fr:5800
+Pour l'utiliser il faut 
+- obtenir un token,
+- l'inscrire dans la section authentification,
+- puis appeler l'API en passant les paramètres souhaités.  
+
+ 
 # Références
 De nombreux articles traitent des différentes briques 
 impliquées dans le Picture Search Engine:
-- La documentation de l'extension Flask-JWT : https://pythonhosted.org/Flask-JWT/
+- L'installation de docker : https://docs.docker.com/get-started/
 - La documentation de l'extension Flask-restplus : https://flask-restplus.readthedocs.io/en/stable/
 - L'installation de MongoDB : https://www.thepolyglotdeveloper.com/2019/01/getting-started-mongodb-docker-container-deployment/
- 
