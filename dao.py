@@ -1,3 +1,6 @@
+"""
+Librairie contenant la classe DAO d'accès à la base de données
+"""
 import datetime
 import pymongo as pymongo
 from bson import ObjectId
@@ -25,15 +28,16 @@ class dao:
     def add_user(self,username,password):
         """
         Ajoute un utilisateur à la base de données
-        :param username:
+        :param username: peut être un email ou n'importe quelle chaine de caractères
         :param password:
-        :return: NA
+        :return: l'utilisateur est retourné sous forme d'un dictionnaire
         """
-        user:=dict({
+        user=dict({
             "username":username,
             "password":password
         })
         self.db["users"].insert_one(user)
+        return user
 
     def get_user(self,token):
         """
@@ -44,6 +48,7 @@ class dao:
         """
         username,password=decodeToken(token)
         return self.db["users"].find({"username":username,"password":password})
+
 
     def write_query(self,query:str,token):
         """

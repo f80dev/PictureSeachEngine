@@ -1,3 +1,7 @@
+"""
+Fichier principal d'installation et d'éxécution des APIs
+"""
+
 import ssl
 import sys
 from flask_restplus import Resource, Api, reqparse
@@ -6,27 +10,21 @@ import dao
 from flask import Flask, jsonify, request
 from tools import token_required, createToken, settings, queryUnsplash, queryPixabay
 
-"""
-Fonctions principales d'exécution des API
-"""
-
-
-"""
-Structure du token d'identification
-"""
-authorizations={"apikey":{"type":"apiKey","in":"header","name":"access_token"}
+authorizations={
+    "apikey":{
+        "type":"apiKey",
+        "in":"header",
+        "name":"access_token"
+    }
 }
 
-"""
-Initialisation du moteur d'execution de l'API
-"""
+#Initialisation du moteur d'execution de l'API
 app = Flask(__name__)
 CORS(app)
 api = Api(app,authorizations=authorizations)
-"""
-Instanciation de la couche de données
-Les paramètres seront passés à l'installation de l'image Docker
-"""
+#Instanciation de la couche de données
+#Les paramètres seront passés à l'installation de l'image Docker
+
 dao=dao.dao(sys.argv[2],sys.argv[3],sys.argv[4])
 
 #http://localhost:8090/index.html?server=http://localhost&port=5800
@@ -94,28 +92,23 @@ class Image(Resource):
         return jsonify(rc)
 
 
-
 if __name__ == '__main__':
-    """
-    La fonction principale se charge de lancer l'instance Flask en tenant compte
-    des options passées via la commande docker
-    """
+    #La fonction principale se charge de lancer l'instance Flask en tenant compte
+    #des options passées via la commande docker
+
     _port=sys.argv[1]
     if "debug" in sys.argv:
         app.run(host="0.0.0.0",port=_port,debug=True)
     else:
         if "ssl" in sys.argv:
-            """
-            Le context de sécurisation est chargé avec les certificats produit par "Let's Encrypt"
-            """
+            #Le context de sécurisation est chargé avec les certificats produit par "Let's Encrypt"
             context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
             context.load_cert_chain("/app/certs/fullchain.pem", "/app/certs/privkey.pem")
             app.run(host="0.0.0.0", port=_port, debug=False, ssl_context=context)
+
         else:
-            """
-        Le serveur peut être déployé en mode non sécurisé
-        cela dit la plus part des front-end ne peuvent être hébergés quand mode https
-        ils ne peuvent donc appeler que des serveurs en https. Il est donc préférable
-        de déployer l'API sur un serveur sécurisé
-        """
+            # Le serveur peut être déployé en mode non sécurisé
+            # cela dit la plus part des front-end ne peuvent être hébergés quand mode https
+            # ils ne peuvent donc appeler que des serveurs en https. Il est donc préférable
+            # de déployer l'API sur un serveur sécurisé
             app.run(host="0.0.0.0", port=_port, debug=False)

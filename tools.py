@@ -1,14 +1,14 @@
+"""
+Librarie réunissant des fonctions de lecture du fichier de paramétrage,
+les fonctions d'interrogation des bibliothéques d'images et les fonctions
+de gestion des tokens
+"""
+
 import urllib
 import yaml
 from flask import json, request
 import jwt
 from functools import wraps
-
-"""
-Librarie réunissant des fonctions de lecture du fichier de paramétrage, 
-les fonctions d'interrogation des bibliothéques d'images et les fonctions
-de gestion des tokens
-"""
 
 def settings(field=""):
     """
@@ -30,7 +30,7 @@ def queryPixabay(query:str,limit:int=10,quality:bool=False):
     :param query: contient le mot clé à utiliser pour rechercher les images
     :param limit: nombre d'images retournées
     :param quality: permet de restreindre la recherche aux photos de l'éditeur
-    :return: liste au format json des urls des photos correspondant à la requête
+    :return: liste au format json des urls des photos correspondantes à la requête
     """
     pixabay_settings=settings("sources")["pixabay"]
     url=pixabay_settings["endpoint"]+"?per_page="+str(limit)+"&image_type=photo&key=" + pixabay_settings["key"] + "&q=" + query
