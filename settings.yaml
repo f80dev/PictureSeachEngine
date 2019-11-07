@@ -1,11 +1,13 @@
 api:
   server: https://home.f80.fr
-  endpoint: /api/images
+  endpoint: /api
 
 sources:
   pixabay:
+    #portail développeur : https://pixabay.com/api/docs/
     key: 5489947-2039fe3621c0de1cbb91d08c6
     endpoint: https://pixabay.com/api/
   unsplash:
+    #portail developpeur : https://unsplash.com/documentation#registering-your-application
     key: 916605164fceffa92953a549dfe86da9b29fe6c882200c92d342dc1b3cdbc630
     endpoint: https://api.unsplash.com/
