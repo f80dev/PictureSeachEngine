@@ -3,13 +3,13 @@ Le Picture Search Engine est un méta-moteur open source de recherche de photos 
 L'objectif du projet est surtout d'illustrer une architecture client/serveur reposant sur un framework
 de type micro-services securisés.
 
-# Objectif
-Ce projet est met en oeuvre plusieurs technologies classiques mais éprouvées et donc "reconnues" 
-pour ce type d'architecture.
+# Objectif du projet
+L'objectif de ce projet est de combiner plusieurs technologies éprouvées et reconnues pour 
+illustrer la mise en oeuvre d'une architecture client/serveur de type micro-services.
  
-Pour détailler la solution, On la décompose en 2 briques : le front-end et le back-end
+La solution, peut se décompose en 2 briques : 
  
-Le backend :
+## Le backend
 - est développé en python. C'est un langage moderne dont le nombre de bibliothéque garantit 
 de pouvoir s'attaquer à tout type de domaine d'activité 
 avec une prédisposition pour la data et l'intelligence artificiel,
@@ -25,54 +25,61 @@ et un outil de test performant et simple,
 via la gestion de token d'accès,
 - la sécurisation du serveur via l'usage d'un certificat SSL Let's Encrypt
 
-Le front-end est, pour l'instant, sous forme d'une page HTML minimale pour utiliser l'API et 
-d'une interface d'interrogation de l'API via Swagger UI 
+## Le front-end 
 
-Dans un second article, nous développerons un front-end multi-device 
-- sous format Progressive Web App via Angular 8 (vs un développement spécifique pour chaque PS),
+pour l'instant, sous forme d'une page HTML minimale pour utiliser l'API et 
+d'une interface d'interrogation via Swagger UI, 
+il doit être porté dans un second temps vers un front-end multi-device 
+- sous format Progressive Web App via Angular 8,
 - en typescript,
 - hébergé gratuitement sur les "github page".
 
-# Démonstration
-L'interface minimal est accessible directement à l'adresse : https://pse.f80.fr
-L'interface d'interrogation de l'API est disponible sur : https://server.f80.fr:5800 
+# Démonstrateur
+Un démonstrateur est disponible en ligne.
+- L'interface minimal est accessible directement à l'adresse : https://pse.f80.fr
+- L'interface d'interrogation de l'API est disponible sur : https://server.f80.fr:5800 
 
-# Configuration du serveur
-A priori l'api peut être installé sur n'importe quel type d'OS supportant Python. 
+# Configuration du serveur de l'API
+A priori l'api peut être installée sur n'importe quel type d'OS supportant Python. 
 Dans cet exemple, on utilise une distribution Linux : Fedora (v29)
 
 Pour faire simple, toute l'installation va se faire en mode root 
 ce qui n'est pas conseillé en environnement de production.
 Ainsi le répertoire /root va héberger :
-- un sous-répertoire "mongodata" destiné à stocker la base MongoDB,
-- un sous-répertoire "certs" va recevoir une copie des certificats pour la connexion SSL,
+- un sous-répertoire "/mongodata" destiné à stocker la base MongoDB,
+- un sous-répertoire "/certs" recevant une copie des certificats pour la connexion SSL,
 
 Nous allons principalement utilisé des images sous Docker 
 pour installer les différentes composantes du serveur. il faut 
 donc commencer par l'installer ce gestionnaire de containers.
 
-On trouve beaucoup de tutoriel suivant le système d'exploitation. Pour linux, après s'être
- connecté en mode root, la commande suivante 
+On trouve beaucoup de tutoriel suivant le système d'exploitation. 
+Pour linux, après s'être connecté en mode root, la commande suivante 
 fonctionne sans intervention le plus souvent :
-
 `curl -sSL get.docker.com | sh`
  
- puis on démarre le démon et on l'installe pour un démarage automatique 
- 
- `systemctl start docker && systemctl enable docker`
+puis on démarre le démon et on l'installe pour un démarage automatique 
+`systemctl start docker && systemctl enable docker`
 
-Normalement docker est maintenant installé.  
+Normalement docker est maintenant installé. On peut le vérifier par la commande
+`docker ps`  
 
 # Sécurisation
-L'étape suivante consiste à sécurisé le serveur pour permettre un appel de notre API via "https"
-L'api peut fonctionner sur un serveur non sécurisé. Dans ce cas, il n'est pas nécéssaire de mettre en 
-oeuvre le chapitre suivant. 
+L'étape suivante consiste à sécuriser le serveur pour permettre un appel de notre API via "https"
+et l'API par l'usage d'un token d'authentification.
 
-## ... du serveur
+## sécurisation du serveur
 L'usage de l'https pour héberger les sites est de plus en plus courant. 
-Cela implique que les api utilisées par les front-end sécurisés doivent également utilisé le protocol 'https'
-On doit donc mettre en place des certificats SSL et interogger le serveur 
-via son nom de domaine. Dans cet exemple on va utilise des certificats "Let's Encrypt".
+Cela implique que les api utilisées par les front-end sécurisés doivent 
+également utilisé le protocol 'https'. 
+Pour autant on peut faire fonctionner l'API PSE sur un serveur non sécurisé. 
+Dans ce cas, vous pouvez directement passez au chapitre suivant.
+
+l'usage https nécessite 
+ - la mise en place de certificats SSL,
+ - l'interoggation du serveur via un nom de domaine. 
+  
+ Dans cet exemple on va utiliser des certificats "Let's Encrypt".
 
 Vous devez paramétrer le DNS de votre domaine pour le faire pointer vers l'adresse IP de
 votre serveur. Le principe consiste 
