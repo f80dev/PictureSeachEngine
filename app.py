@@ -56,7 +56,7 @@ class Developer(Resource):
 parser = reqparse.RequestParser()
 parser.add_argument('limit', type=int, help='Number of images return')
 parser.add_argument('quality', type=bool, help='Ask for best quality')
-@api.route("/api/<string:query>",endpoint=settings("api")["endpoint"])
+@api.route(settings("api")["endpoint"]+"/<string:query>",endpoint=settings("api")["endpoint"])
 @api.doc(params={'query': "Requête pour intérroger les bases de données d'image"})
 @api.doc(security="apikey")
 class Image(Resource):

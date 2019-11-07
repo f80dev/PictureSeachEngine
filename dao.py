@@ -44,7 +44,7 @@ class dao:
         Décrypte le token pour en extraire le user et mot de passe et interroge la base de données pour s'assurer que
         l'utilisateur est présent
         :param token:
-        :return:
+        :return: l'utilisateur correspondant au username et mot de passe
         """
         username,password=decodeToken(token)
         return self.db["users"].find({"username":username,"password":password})
@@ -55,7 +55,7 @@ class dao:
         Ecrit une requête dans la base, pour y envisager un suivi et/ou une facturation
         :param query:
         :param token:
-        :return:
+        :return: l'enregistrement écrit dans la base
         """
         record=dict({
             "_id":ObjectId(),
@@ -63,5 +63,6 @@ class dao:
             "user":token,
             "dtCreate":datetime.datetime.now().timestamp()
         })
-        print("Ecriture en base")
+
         self.db["queries"].insert_one(record)
+        return record

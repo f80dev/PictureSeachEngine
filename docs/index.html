@@ -46,7 +46,10 @@
         Copyrigth <a href="http://f80.fr">F80</a> - 2019<br>
         Version 1.0<br>
         <a href="https://www.linkedin.com/in/hhoareau/">Hervé HOAREAU</a>
-        <br><br>
+    </td>
+    <td>
+        <a href="https://">Interface API</a>
+        <br>
         <a href="https://github.com/f80dev/PictureSeachEngine"><img src="github.png" style="width:100px"></a>
     </td>
 </tr></table>
@@ -87,6 +90,7 @@
     //La localisation du serveur est passé en argument de la page de test
     var server=getParams().server || "https://server.f80.fr";
     var port=getParams().port || 5800;
+    var endpoint=getParams().endpoint || "/api";
     var url=server+":"+port;
     var token=null;
     if(!url.startsWith("http"))url="http://"+url;
@@ -107,7 +111,7 @@
             zone.innerHTML="<img src='wait.gif'>";
 
             //Si la requête est bien valable, on appele l'API. Le token est passé dans le header
-            fetch(url+"/api/"+query+"?limit=20&quality=true",{headers:new Headers({'access_token':token})}).then((r)=>{
+            fetch(url+endpoint+"/"+query+"?limit=20&quality=true",{headers:new Headers({'access_token':token})}).then((r)=>{
                 r.json().then((result)=>{
                     if(result==null || result.length==0){
                         zone.innerHTML="Aucune réponse à la recherche sur "+query;

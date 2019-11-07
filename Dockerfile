@@ -35,4 +35,6 @@ RUN mkdir /app
 WORKDIR /app
 COPY . /app
 
+#L'usage d'entrypoint permet que les paramètre placer dans le "docker run" sont
+#directement passés a l'API python dans le "sys.argv"
 ENTRYPOINT ["python", "app.py"]

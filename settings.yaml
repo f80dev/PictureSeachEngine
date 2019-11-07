@@ -1,22 +1,6 @@
-database:
-  #server: home.f80.fr
-  #server: server.f80.fr
-  port: 27017
-  #username: admin
-  #password: admin_password
-
 api:
   server: https://home.f80.fr
-  port: 5600
-  endpoint: api
-
-api_users:
-  - id: 1
-    username: demo
-    password: demo_password
-  - id: 2
-    username: demo2
-    password: demo2_password
+  endpoint: /api
 
 sources:
   pixabay:

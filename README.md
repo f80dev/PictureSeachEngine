@@ -146,18 +146,27 @@ Les enregistrements sont donc des dictionnaires python. On utilise 2 types d'obj
 Les utilisateurs des API ont la structure suivante :
 
 
-# L'api
+# Logique de fonctionnement de l'API
 ## Principe
 L'API est avant tout un prétexte pour illustrer l'architecture, pour autant elle pourrait servir de 
 point de départ à un moteur de recherche d'images comme alternative à un google image.
 Elle recoit en paramètre un mot clé et interroge deux plateformes de référencement de photo : PixaBay
-et Unsplash. Les résultats sont concaténés et renvoyer au front-end sous forme d'une suite d'URL.
+et Unsplash. 
+Les résultats sont concaténés et renvoyés au front-end sous forme d'une suite d'URL.
 
 ## Fichier de configuration
 Dans une optique d'industrialisation, les paramètres du serveur sont regroupés 
 dans une fichier YAML. <br>
 Même si ce format est moin courant que json, on gagne en lisibilité 
-et surtout on profite ainsi de la possibilité d'ajouter des commentaires. 
+et surtout on profite ainsi de la possibilité d'ajouter des commentaires.
+
+Il contient les paramètres nécéssaires au fonctionnement du serveur, en particulier :
+- le point de terminaison (endpoint) de notre API
+- les paramètres d'accès aux plateformes de photos.
+
+Ce fichier doit resté confidentiel.
+On aurait pû y ajouter les paramètres d'accès à la base mais ces paramètres sont passés
+dans la commande docker d'installation du serveur (voir rubrique sur l'installation)
 
 ##Principale fonction mise en oeuvre
 Le code est abondamment commenté, donc facilement adaptable / "forkable".
@@ -262,11 +271,15 @@ Un démonstrateur est disponible en ligne via une interface minimal,
 accessible directement à l'adresse : https://pse.f80.fr
 
 ## le mini front-end
-Elle se charge de :
+L'interface se charge de :
 - demander un token d'utilisation de l'API,
 - demander le mot clé de la recherche,
 - appeler l'API avec le mot clé et le token,
 - afficher le résultat.
+
+Au lancement on peut lui passer 3 paramètres pour lui indiquer ou se trouve le serveur 
+et le port ouvert pour l'API :
+`http://pse.f80.fr?server=<addresse_du_server>&port=<port_de_api>&endpoint=<endpoint>`
 
 Dans un prochain article, nous remplacerons ce fichier par une web application développée sur Angular.
 
