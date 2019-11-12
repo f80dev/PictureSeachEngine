@@ -80,10 +80,11 @@ class Image(Resource):
         #va nous permettre de parser automatiquement les paramètres
 
         #Ici on appel le service pixabay pour récupérer des images
-        rc=queryPixabay(query,args["limit"],args["quality"])
+        rc=queryPixabay(query,args["limit"]/2,args["quality"])
 
+        limit=len(rc)-args["limit"]
         #On ajoute les images de unspash
-        for pict in queryUnsplash(query):
+        for pict in queryUnsplash(query,limit):
             rc.append(pict)
 
         #Chaque requête est enregistrée pour la gestion des quotas et d'une éventuelle facturation

@@ -57,12 +57,12 @@ class dao:
         :param token:
         :return: l'enregistrement écrit dans la base
         """
-        record=dict({
+        log_entrie=dict({
             "_id":ObjectId(),
             "query":query,
             "user":token,
             "dtCreate":datetime.datetime.now().timestamp()
         })
 
-        self.db["queries"].insert_one(record)
-        return record
+        self.db["queries"].insert_one(log_entrie)
+        return log_entrie
