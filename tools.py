@@ -55,7 +55,9 @@ def queryUnsplash(query,limit=10):
     :return: liste au format json des urls des photos correspondant à la requête
     """
     unsplash_settings = settings("sources")["unsplash"]
-    url = unsplash_settings["endpoint"] + "search/photos?query="+query+"&per_page="+str(limit)+"&client_id=" + unsplash_settings["key"]
+    url = unsplash_settings["endpoint"] \
+          + "search/photos?query="+query+"&per_page="\
+          +str(limit)+"&client_id=" + unsplash_settings["key"]
 
     with urllib.request.urlopen(url) as response:
         result=json.load(response)
