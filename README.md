@@ -8,7 +8,7 @@ illustrer la mise en oeuvre d'une architecture client/serveur de type micro-serv
 La solution, peut se décompose en 2 briques : 
  
 ## Le backend
-- est développé en python. C'est un langage moderne dont le nombre de bibliothéque garantit 
+- est développé en python. Un langage moderne dont le nombre de bibliothéque garantit 
 de pouvoir s'attaquer à tout type de domaine d'activité 
 avec une prédisposition pour la data et l'intelligence artificiel,
 - l'API repose sur le framework d'architectures micro-services Flask. Il est dotés de nombreux 
