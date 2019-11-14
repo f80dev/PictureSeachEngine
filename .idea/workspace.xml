@@ -26,9 +26,9 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="480">
-                <caret line="159" column="35" lean-forward="true" selection-start-line="159" selection-start-column="35" selection-end-line="159" selection-end-column="35" />
+            <state split_layout="FIRST">
+              <first_editor relative-caret-position="260">
+                <caret line="336" column="21" lean-forward="true" selection-start-line="336" selection-start-column="21" selection-end-line="336" selection-end-column="21" />
               </first_editor>
               <second_editor />
             </state>
@@ -305,7 +305,7 @@
       <workItem from="1573577323395" duration="2681000" />
       <workItem from="1573649248605" duration="909000" />
       <workItem from="1573671890525" duration="1061000" />
-      <workItem from="1573758534012" duration="2585000" />
+      <workItem from="1573758534012" duration="4219000" />
     </task>
     <task id="LOCAL-00001" summary="Première mise en ligne pour sauvegard">
       <created>1572596889912</created>
@@ -580,17 +580,24 @@
       <option name="project" value="LOCAL" />
       <updated>1573580002562</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="Première mise en ligne pour sauvegard">
+      <created>1573761906245</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1573761906245</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="87849000" />
+    <option name="totallyTimeSpent" value="89483000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1295" height="828" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4977064" visible="true" weight="0.16680162" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4977064" weight="0.16680162" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -754,9 +761,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="480">
-            <caret line="159" column="35" lean-forward="true" selection-start-line="159" selection-start-column="35" selection-end-line="159" selection-end-column="35" />
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="260">
+            <caret line="336" column="21" lean-forward="true" selection-start-line="336" selection-start-column="21" selection-end-line="336" selection-end-column="21" />
           </first_editor>
           <second_editor />
         </state>

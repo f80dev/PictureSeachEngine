@@ -1,5 +1,6 @@
 # PSE - Picture Search Engine
-Le Picture Search Engine est un méta-moteur, open source, de recherche de photos de qualitées.
+Le Picture Search Engine est un méta-moteur, 
+open source, de recherche de photos de qualitées.
 
 # Objectif du projet
 L'objectif de ce projet est de combiner plusieurs technologies éprouvées et reconnues pour 
@@ -86,7 +87,7 @@ On peut également consulter les sites suivants :
 - https://blog.youdot.io/fr/4-types-enregistrements-dns-a-connaitre/
 - https://docs.icodia.com/general/zones-dns
 
-Il faut maintenant fabriquer les certificats.
+Il faut, maintenant, fabriquer les certificats.
 Sur le serveur qui hébergera l'api, 
 on installe "certbot" en suivant les instructions du site: 
 https://certbot.eff.org/instructions
@@ -97,7 +98,7 @@ via la commande :
 en remplacant sub.domain.com par votre domaine. 
 
 Lors de son exécution, Let's Encrypt va chercher à joindre votre serveur
-via le port 80. Il faut donc s'assurer que l'accès est possible (en particulier
+via le port 80. Il faut donc s'assurer que l'accès est possible depuis l'extérieur (en particulier
 en regardant du côté des firewall et/ou des redirection de ports)
 
 Si tout se passe bien, vous récupèrez
@@ -124,7 +125,7 @@ souvent fourni gratuitement par le fournisseur
 du nom de domaine.
 
 
-## de l'api
+## Sécurisation de l'api par gestion de token
 Flask permet l'ajout d'une couche de sécurité directement au niveau
 de l'API via l'usage de token pour identifier les utilisateurs (développeurs).
 
@@ -145,6 +146,9 @@ Dans une version plus industrialisée, on pourrait par exemple exiger un email c
 nom d'utilisateur. A chaque appel, l'api se connectera à la base pour retrouver
 le compte via le token. Ainsi il est possible de vérifier que le développeur à
 les droits pour utiliser notre API.
+
+Une autre option pour, non mise en oeuvre ici, consiste à n'authoriser les appels
+à l'API que depuis une adresse spécifique.
 
 # La base de données
 L'objectif de l'article est également de montrer un exemple d'implémentation d'une 
@@ -202,14 +206,14 @@ On aurait pû y ajouter les paramètres d'accès à la base mais ces paramètres
 dans la commande docker d'installation du serveur (voir rubrique sur l'installation)
 
 ##Principale fonction mise en oeuvre
-Le code est abondamment commenté, donc facilement adaptable / "forkable".
+Le code est assez court et abondamment commenté, donc facilement adaptable / "forkable".
+Dans la suite on le décrit dans les grandes lignes.
 
-On peut le décomposer en plusieurs blocs :
-### Le fonctionnement des API
+### Le fonctionnement des API : retourner des photos
 - les fonctions queryUnsplash et queryPixabay ("tools.py") se chargent 
 de l'interrogation des plateformes de photos. Elles nécessitent un enregistrement préalable sur leur portail
 développeurs afin d'y récupérer des clés d'usage. Voir https://pixabay.com/api/docs/ et 
-https://unsplash.com/developers. Ces clés doivent être inscrites dans le fichier settings.yaml du projet.
+https://unsplash.com/developers. Ces clés doivent être inscrites dans le fichier "settings.yaml" du projet.
 
 - La ressource "Image" dont l'API "get" se charge de la consolidation 
 des résultats des deux fonctions précédentes
@@ -219,6 +223,11 @@ La configuration des API, route et parsing des paramètres en particulier, est a
 - la classe Image qui par, l'héritage de la classe ressource, fonctionne suivant les préceptes REST.
 - les décorateurs app.route, indiquant les routes pour l'appel des apis.
 - le parser, se charge de décomposer les paramètres et contribue à produire la documentation pour swagger
+
+Dans notre serveur on n'a finalemenet besoin que d'une seule api (plus celle pour l'authentification). 
+On pourrait en ajouter d'autres, mais celles ci seraient construites sur à peu prèt le même model 
+imposé par Flask-plus : une classe représente la ressource adressées et les méthode GET, POST de cette classe 
+implémentent la logique REST.
 
 ### Authentification des appels à l'API : tools.py 
 La gestion des tokens d'authentification, en particulier encodage et décodage, 
@@ -323,16 +332,17 @@ Dans un prochain article, nous remplacerons ce fichier par une web application d
 Grâce à RestPlus on dispose également d'une interface d'interrogation de l'API 
 sur : https://server.f80.fr:5800
 Pour l'utiliser il faut 
-- obtenir un token,
-- l'inscrire dans la section authentification,
+- obtenir un token par appel de la méthode "auth",
+- l'inscrire dans la section "authentification" de Swagger UI,
 - puis appeler l'API en passant les paramètres souhaités.  
 
  
 # Références
 En plus des différents liens déjà cités, 
 De nombreux articles disponibles sur le web, traitent des différentes briques 
-impliquées dans le Picture Search Engine:
+impliquées dans l'API:
 - L'installation de docker : https://docs.docker.com/get-started/
 - La documentation de l'extension Flask-restplus : https://flask-restplus.readthedocs.io/en/stable/
 - L'installation de MongoDB : https://www.thepolyglotdeveloper.com/2019/01/getting-started-mongodb-docker-container-deployment/
-
+- Comprendre les décorateurs sous python : http://sametmax.com/comprendre-les-decorateurs-python-pas-a-pas-partie-1/
+- Un article assez proche sur la mise en place d'une API via RestPlus : https://blog.invivoo.com/designer-des-apis-rest-avec-flask-restplus/
