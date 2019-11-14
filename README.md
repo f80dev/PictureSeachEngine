@@ -62,7 +62,7 @@ L'étape suivante consiste à
 - sécuriser le serveur pour permettre un appel de notre API via "https"
 - authentifier les utilisateurs de l'API par l'usage d'un token.
 
-## sécurisation du serveur
+## sécurisation du serveur : certificats SSL
 L'usage de l'https pour héberger les sites est de plus en plus courant. 
 Cela implique que les api utilisées par les front-end sécurisés doivent 
 également utiliser le protocol 'https'. 
@@ -75,35 +75,43 @@ l'usage 'https' nécessite
   
 Dans cet exemple on utilise des certificats "Let's Encrypt".
 
-Vous devez paramétrer le DNS de votre domaine pour le faire pointer vers l'adresse IP de
+Vous devez paramétrer le DNS de votre domaine 
+pour le faire pointer vers l'adresse IP de
 votre serveur. Le principe consiste 
 à ajouter un "enregistrement A" au DNS du nom de domain.
 
-La procédure pas à pas dépend de votre fournisseur de nom de domaine et est souvent détaillée dans les FAQ.
+La procédure pas à pas dépend de votre fournisseur 
+de nom de domaine et est souvent détaillée dans les FAQ.
 On peut également consulter les sites suivants :  
 - https://blog.youdot.io/fr/4-types-enregistrements-dns-a-connaitre/
 - https://docs.icodia.com/general/zones-dns
 
 Il faut maintenant fabriquer les certificats.
-Sur le serveur qui hébergera l'api, on installe "certbot" en suivant les instructions du site: 
+Sur le serveur qui hébergera l'api, 
+on installe "certbot" en suivant les instructions du site: 
 https://certbot.eff.org/instructions
 
-Cet outil automatise la procédure d'installation des certificats via la commande :
+Cet outil automatise la procédure d'installation des certificats 
+via la commande :
 `certbot certonly --standalone -d sub.domaine.com` 
 en remplacant sub.domain.com par votre domaine. 
+
+Lors de son exécution, Let's Encrypt va chercher à joindre votre serveur
+via le port 80. Il faut donc s'assurer que l'accès est possible (en particulier
+en regardant du côté des firewall et/ou des redirection de ports)
 
 Si tout se passe bien, vous récupèrez
 plusieurs fichiers dans le répertoire /etc/letsencrypt/live/<sub.domain.com>
 
-Pour établir une connexion sécurisée avec Flask on utilise deux fichiers 
+Pour établir une connexion sécurisée, Flask utilise deux fichiers 
 produit par certbot : 
-
 - "fullchain.pem" : contenant l'ensemble des certificats
 - "privkey.pem" :  La clé privée de votre certificat. A garder confidentielle en toutes circonstances 
                    et à ne communiquer à personne quel que soit le prétexte.
 
 Ils faut rendre ces fichiers visibles à l'image docker de notre serveur
-On va donc les copier dans le repertoire /root/certs que l'on ouvrira à l'image via la commande "VOLUME"
+On va donc les copier dans le repertoire /root/certs 
+que l'on ouvrira à l'image via la commande "VOLUME"
 
 `mkdir /root/certs && cp /etc/letsencrypt/live/sub.domain.com/* /root/certs`
 
@@ -111,7 +119,8 @@ Théoriquement, cette manipulation doit être réalisé chaque fois que l'on met
 à jour les certificats. Let's encrypt impose le renouvellement des certificats tous les 3 mois.
 La procédure est automatisable via (voir https://certbot.eff.org/docs/using.html?highlight=renew#renewing-certificates)
 met il faut également automatiser la copie. 
-Vous pouvez également utiliser un certificat, souvent fourni gratuitement par le fournisseur
+Vous pouvez également utiliser un certificat, 
+souvent fourni gratuitement par le fournisseur
 du nom de domaine.
 
 
@@ -119,9 +128,10 @@ du nom de domaine.
 Flask permet l'ajout d'une couche de sécurité directement au niveau
 de l'API via l'usage de token pour identifier les utilisateurs (développeurs).
 
-Pour aller plus loin, en particulier si l'on souhaite commercialiser l'api, il est souhaitable
-d'installer une solution de gestion d'API (API management). On trouve plusieurs produits pour faire cela
-Certains propriétaires, d'autres Open source comme le détaille cet article : 
+Pour aller plus loin, en particulier si l'on souhaite commercialiser l'api, 
+il faudrat envisager l'installation de solution de gestion d'API (API management). On trouve plusieurs produits pour faire cela
+Certaines sont propriétaires, d'autres Open source 
+comme le détaille cet article : 
 <a href="https://techbeacon.com/app-dev-testing/you-need-api-management-help-11-open-source-tools-consider">11 open-source tools to consider</a>
 
 Dans notre cas, nous allons rester sur une gestion du token intégrer au serveur.
@@ -132,7 +142,9 @@ dans la base de données et de retourner
 le token d'authentification. 
 
 Dans une version plus industrialisée, on pourrait par exemple exiger un email comme
-nom d'utilisateur.
+nom d'utilisateur. A chaque appel, l'api se connectera à la base pour retrouver
+le compte via le token. Ainsi il est possible de vérifier que le développeur à
+les droits pour utiliser notre API.
 
 # La base de données
 L'objectif de l'article est également de montrer un exemple d'implémentation d'une 
@@ -228,48 +240,56 @@ d'une gestion de quotas et d'une éventuelle facturation
 Là aussi, l'usage de Docker simplifie le déploiement de notre API.
 
 ## Fabrication de l'image docker
-L'idéal est de commencer par s'inscrire sur le <a href='https://hub.docker.com/'>hub docker</a> 
-afin de disposer d'un espace susceptible de recevoir
-l'image Docker de l'API. 
+Avant de fabriquer l'image, il est préférable de s'inscrire 
+sur le <a href='https://hub.docker.com/'>hub docker</a> 
+Après cette inscription vous disposez d'un espace pour stocker vos images Docker. 
 
 une fois le code finaliser, le fichier "Dockerfile" permet la construction d'une image
-déployable du serveur d'API.
+déployable du serveur d'API. Elle repose sur une distribution Linux relativement
+légère et disposant d'une image Python préinstallée.
 
-La commande pour construire l'image est simple.
+Le fichier Dockerfile se charge d'installer sur l'image les libraries nécéssaires à
+l'exécution de l'API et d'installer les fichiers python nécéssaire dans le répertoire /app 
+de l'images.
+
+La commande pour construire l'image est simple :
 
 `docker build -t <votre_hub>/picturesearchenginex86 .`  
 
 Elle doit être exécutée depuis le répertoire contenant le fichier "Dockerfile".
-puis on se connecte :
+
+Une fois construite on se connecte a son compte docker pour pouvoir l'uploader.
 
 `docker login`
 
-pour enfin, la mettre en ligne sur le hub docker 
-
+après connexion, on execute la ligne suivante pour mettre en ligne notre image :
 `docker push <votre_hub>/picturesearchenginex86:latest`
 
-ou <votre_hub> est à remplacer par votre compte.
+ou <votre_hub> est à remplacer par votre compte, évidemment.
 
 
 ## Installation de l'image
 Maintenant que notre image est disponible, on peut la récupérer et l'installer sur le serveur
-Ainsi, l'installation de l'API se fera par la commande :
+Ainsi, l'installation de l'API se fera via la commande "pull".
 
 `docker pull <votre hub>/picturesearchenginex86:latest` 
 
-pour récupérer l'image puis
+pour lancer le serveur, il suffit d'utiliser la commande "run" de docker
 
 `docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d <votre hub>/picturesearchenginex86:latest localhost admin admin_password 5600 ssl` 
 
 grâce à cette commande on a :
 - téléchargé l'image picturesearchenginex86 fabriquée préalablement,
-- programmé le rédémarrage automatique de l'API lorsque le serveur redémarre (restart),
+- programmé le rédémarrage automatique de l'API lorsque le serveur redémarre (--restart),
 - ouvert l'accès aux certificats pour permettre à Flask de sécuriser les transactions (-v)
 - ouvert le port 5600 pour la communication a notre API (-p)
 
-Les derniers termes de la commande sont directement "passés" comme paramètres a l'API (récupérer par sys.args en python):
-- Ainsi, les paramètres de connexion à la base de données sont transmit à l'installation de l'image dans la commande docker. Ici
-on a passé "localhost" en considérant que l'API et la base sont sur le même serveur et "admin"/"admin_password" comme
+Les derniers termes de la commande sont directement "passés" 
+comme paramètres a l'API (récupérer par sys.args en python):
+- Ainsi, les paramètres de connexion à la base de données sont transmis 
+à l'installation de l'image dans la commande docker. Ici
+on a passé "localhost" en considérant que l'API et la base sont sur 
+le même serveur et "admin"/"admin_password" comme
 utilisateur / password pour se connecter à la base
 - enfin en terminant par "ssl" on configure l'API en mode sécurisé
 (il est possible de lancer l'api en mode non sécurisé en enlenvant le paramèttre ssl. Dans ce cas, 
@@ -277,19 +297,14 @@ l'étape de fabrication des certificats n'est pas nécéssaire et l'api peut êt
 l'adresse IP du serveur) 
 
 
-# Remarque divers
+# Démonstrateur de l'API
+Un démonstrateur, disponible en ligne via une interface minimal, est
+accessible directement à l'adresse : https://pse.f80.fr
 
-- Il est possible de récupérer l'image utilisée par le démonstrateur en exécutant, sur le serveur :
+Il est possible de récupérer l'image utilisée par le démonstrateur en exécutant, sur le serveur :
 
 `docker pull f80hub/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d f80hub/picturesearchenginex86:latest localhost admin admin_password 5600 ssl`
- 
-- Via RestPlus on génére automatiquement une documentation Swagger et 
-une interface d'utilisation pour notre API 
 
-
-# Démonstrateur
-Un démonstrateur est disponible en ligne via une interface minimal, 
-accessible directement à l'adresse : https://pse.f80.fr
 
 ## le mini front-end
 L'interface se charge de :
@@ -314,8 +329,10 @@ Pour l'utiliser il faut
 
  
 # Références
-De nombreux articles traitent des différentes briques 
+En plus des différents liens déjà cités, 
+De nombreux articles disponibles sur le web, traitent des différentes briques 
 impliquées dans le Picture Search Engine:
 - L'installation de docker : https://docs.docker.com/get-started/
 - La documentation de l'extension Flask-restplus : https://flask-restplus.readthedocs.io/en/stable/
 - L'installation de MongoDB : https://www.thepolyglotdeveloper.com/2019/01/getting-started-mongodb-docker-container-deployment/
+
