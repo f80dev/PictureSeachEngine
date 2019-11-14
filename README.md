@@ -346,3 +346,8 @@ impliquées dans l'API:
 - L'installation de MongoDB : https://www.thepolyglotdeveloper.com/2019/01/getting-started-mongodb-docker-container-deployment/
 - Comprendre les décorateurs sous python : http://sametmax.com/comprendre-les-decorateurs-python-pas-a-pas-partie-1/
 - Un article assez proche sur la mise en place d'une API via RestPlus : https://blog.invivoo.com/designer-des-apis-rest-avec-flask-restplus/
+
+
+Article rédigé par Herve HOAREAU
+Société F80, Développement Full-Stack, tranformation digitale et analyse de données
+herve.hoareau@f80.fr
