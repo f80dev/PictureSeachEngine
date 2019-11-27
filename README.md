@@ -152,7 +152,7 @@ Une autre option pour, non mise en oeuvre ici, consiste à n'authoriser les appe
 
 # La base de données
 L'objectif de l'article est également de montrer un exemple d'implémentation d'une 
-base de données puissante dans l'univers Python. Pour cette raison on installe MongoDB
+base de données moderne et courrante dans l'univers Python. Pour cette raison on installe MongoDB
 via la librairie "pymongo" (https://api.mongodb.com/python/current/)
 
 ## Installation
@@ -168,16 +168,17 @@ Il faut retenir que
 - l'écriture dans la base depuis l'API se fera avec le user/mot de passe : admin/admin_password. 
 Ce couple sera utilisé dans l'API pour se connecter à la base
 - la base n'est pas nécéssairement installée sur le même serveur que l'API
-- la base est disponible sur le port 27017. 
+- le port de connexion à la base de donnée est celui par défaut, le 27017. Dans une optique industrielle, il peut être souhaitable
+de le modifier 
 - il est possible de se connecter via l'outil Mongo Compass (https://www.mongodb.com/products/compass) 
 pour visionner le contenu notre base depuis n'importe quel
-poste dès lors qu'on utilise bien les paraméètres de connexion ci-dessus
+poste dès lors qu'on utilise bien les paramètres de connexion ci-dessus
 
 ## Usage
 La librairie Python utilisée pour interragir avec MongoDB doit être installée. 
 MongoDB est une base orientée document.
 
-Chaque enregistrement est donc un dictionnaire python. Dans notre API, on utilise 2 types d'objets:
+Chaque enregistrement est donc un dictionnaire python (type dict). Dans notre API, on utilise 2 types d'objets:
 - l'objet user est un simple dictionnaire (user,mot de passe)
 - un objet log_entrie contient chaque appel aux API : le token, la date de l'appel et les paramètres
 
@@ -191,10 +192,18 @@ et Unsplash. Ces deux plateformes exposent des API via leur portail développeur
 
 Les résultats sont concaténés et renvoyés au front-end sous forme d'une suite d'URL.
 
+REST repose sur 4 actions possibles sur les ressources manipulés. GET pour les récupérer, POST pour les ajouter,
+PUT pour mettre a jour une ressource existente, enfin DELETE pour supprimer une ressource.
+Plus d'info sur REST se trouve ici : https://blog.nicolashachet.com/niveaux/confirme/larchitecture-rest-expliquee-en-5-regles/
+La librairie RestPlus, implémente l'architecture REST sur flask. 
+Elle consiste à représenter les ressources (au sens REST) par des classes Python. les verbes, en particulier GET, celui qu'on
+va utiliser, est implémenté par une méthode du même nom de la classe représentant la ressource.
+
+
 ## Fichier de configuration
 Dans une optique d'industrialisation, les paramètres du serveur sont regroupés 
 dans une fichier YAML. <br>
-Même si ce format est moin courant que json, on gagne en lisibilité 
+Même si ce format est moins courant que json, on gagne en lisibilité 
 notamment via la possibilité d'ajouter des commentaires.
 
 Il contient les paramètres nécéssaires au fonctionnement du serveur, en particulier :
@@ -329,12 +338,19 @@ et le port ouvert pour l'API :
 Dans un prochain article, nous remplacerons ce fichier par une web application développée sur Angular.
 
 ## L'interface swagger
-Grâce à RestPlus on dispose également d'une interface d'interrogation de l'API 
-sur : https://server.f80.fr:5800
+Grâce à RestPlus on dispose automatiquement d'une interface d'interrogation de l'API 
+accessible via https://server.f80.fr:5800
+
 Pour l'utiliser il faut 
 - obtenir un token par appel de la méthode "auth",
 - l'inscrire dans la section "authentification" de Swagger UI,
 - puis appeler l'API en passant les paramètres souhaités.  
+
+Cette documentation repose sur l'usage de décorateurs au sein de notre code Python :
+- @api.doc va être utilisé pour documenter le besoin d'une clé d'acces aux APIs
+- @api.expect génére automatiquement une documentation des paramètres reposant sur un parser,
+- @api.param en charge de la documentation des paramètres utilisés par les API (n'utilisant pas un parser)
+- @api.response en charge de la documentation des réponses retournées par l'API
 
  
 # Références
