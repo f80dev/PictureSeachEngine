@@ -1,9 +1,9 @@
 #installation de docker
 #sudo curl -sSL get.docker.com | sh
 
-#x86
-#docker build -t f80hub/picturesearchengineArm . & docker push f80hub/picturesearchengineArm:latest
-#docker rm -f picturesearchenginex86 && docker pull f80hub/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchenginex86 -d f80hub/picturesearchenginex86:latest ssl
+#arm
+#docker build -t f80hub/picturesearchengine_arm . & docker push f80hub/picturesearchengine_arm:latest
+#docker rm -f picturesearchengine && docker pull f80hub/picturesearchengine_arm:latest && docker run --restart=always -v /root/certs:/app/certs -p 5600:5600 --name picturesearchengine_arm -d f80hub/picturesearchengine_arm:latest ssl
 
 #Après renouvellement les certificats doivent être copié dans le répertoire /root/certs
 #cp /etc/letsencrypt/live/server.f80.fr/* /root/certs

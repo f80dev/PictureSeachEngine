@@ -3,9 +3,9 @@ Le Picture Search Engine est un méta-moteur,
 open source, de recherche de photos de qualitées.
 
 # Objectif du projet
-L'objectif de ce projet est de combiner plusieurs technologies éprouvées et reconnues pour 
+L'objectif de cet article est de combiner plusieurs technologies éprouvées et reconnues pour 
 illustrer la mise en oeuvre d'une architecture client/serveur de type micro-services.
- 
+
 La solution, peut se décompose en 2 briques : 
  
 ## Le backend
@@ -33,6 +33,9 @@ il doit être porté dans un second temps vers un front-end multi-device
 - en typescript,
 - hébergé gratuitement sur les "github page".
 
+L'ensemble est très certainement optimisable, mais l'idée est de proposer une architecture 
+de base pour simplifier sa reprise et adapatation à d'autres problématiques.
+
 # Configuration du serveur de l'API
 A priori l'api peut être installée sur n'importe quel type d'OS supportant Python. 
 Dans cet exemple, on utilise une distribution Linux : Fedora (v29)
@@ -45,25 +48,27 @@ Ainsi le répertoire /root va héberger :
 
 Nous allons principalement utilisé des images sous Docker 
 pour installer les différentes composantes du serveur. il faut 
-donc commencer par installer le gestionnaire de containers.
+donc commencer par installer le fameux gestionnaire de containers.
 
 On trouve beaucoup de tutoriel sur l'installation de Docker suivant le système d'exploitation. 
 Pour linux, après s'être connecté en mode root, la commande suivante 
-fonctionne sans intervention le plus souvent :
+fonctionne le plus souvent sans intervention :
+
 `curl -sSL get.docker.com | sh`
  
-puis on démarre le démon et on l'installe pour un démarage automatique 
+puis on démarre le démon et on l'installe pour un démarage automatique :
+
 `systemctl start docker && systemctl enable docker`
 
 Normalement docker est maintenant installé. 
-On peut le vérifier par la commande `docker ps` qui affiche les images docker présente
+On peut le vérifier par la commande `docker ps` qui affiche les images docker présentent.
 
 # Sécurisation
 L'étape suivante consiste à 
 - sécuriser le serveur pour permettre un appel de notre API via "https"
 - authentifier les utilisateurs de l'API par l'usage d'un token.
 
-## sécurisation du serveur : certificats SSL
+## sécurisation du serveur : mise en place des certificats SSL
 L'usage de l'https pour héberger les sites est de plus en plus courant. 
 Cela implique que les api utilisées par les front-end sécurisés doivent 
 également utiliser le protocol 'https'. 
@@ -260,11 +265,18 @@ Là aussi, l'usage de Docker simplifie le déploiement de notre API.
 ## Fabrication de l'image docker
 Avant de fabriquer l'image, il est préférable de s'inscrire 
 sur le <a href='https://hub.docker.com/'>hub docker</a> 
-Après cette inscription vous disposez d'un espace pour stocker vos images Docker. 
+Après cette inscription vous disposez d'un espace pour stocker les images Docker
+que vous allez construire. 
 
-une fois le code finaliser, le fichier "Dockerfile" permet la construction d'une image
+Une fois le code finaliser, stocker dans le fichier "App.py", 
+le fichier Docker ("Dockerfile") permet la construction d'une image
 déployable du serveur d'API. Elle repose sur une distribution Linux relativement
 légère et disposant d'une image Python préinstallée.
+
+Dans le répertoire GitHub, on propose deux fichiers Dockerfile. L'un permet de construire
+une image docker installable sur un serveur de type x86. L'autre va permettre de déployer *
+l'API sur un serveur ARM, Raspberry PI par exemple. Les deux images repose sur la distribution
+Alpine compatible x86 et ARM.
 
 Le fichier Dockerfile se charge d'installer sur l'image les libraries nécéssaires à
 l'exécution de l'API et d'installer les fichiers python nécéssaire dans le répertoire /app 
@@ -281,6 +293,7 @@ Une fois construite on se connecte a son compte docker pour pouvoir l'uploader.
 `docker login`
 
 après connexion, on execute la ligne suivante pour mettre en ligne notre image :
+
 `docker push <votre_hub>/picturesearchenginex86:latest`
 
 ou <votre_hub> est à remplacer par votre compte, évidemment.
