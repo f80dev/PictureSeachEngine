@@ -38,8 +38,7 @@ class Developer(Resource):
     Classe représentant les comptes développeurs habilités à utiliser les API
     """
     @api.expect(auth_parser)
-    @api.doc(responses={200: 'Access token correspondant'})
-
+    @api.response(200, 'Access Token à utiliser pour interroger le moteur PSE')
     def get(self):
         """
         Inscrit l'utilisateur dans la base de données et retourne un token d'accès
@@ -53,21 +52,20 @@ class Developer(Resource):
 
 #Paramétrage des API ___________________________________________________________________________________________________
 #Fixer les paramétres du parser
+#Le parser va permètre d'analyser les paramètres supplémentaire de la requete d'interogration des moteurs
 parser = reqparse.RequestParser()
 parser.add_argument('limit', type=int, help='Number of images return')
 parser.add_argument('quality', type=bool, help='Ask for best quality')
+
 @api.route(settings("api")["endpoint"]+"/<string:query>",endpoint=settings("api")["endpoint"])
-@api.doc(params={'query': "Requête pour intérroger les bases de données d'image"})
+@api.param('query', "Requête pour intérroger les bases de données d'image")
 @api.doc(security="apikey")
 class Image(Resource):
     """
     Représentation des photos retournées par l'API
     """
-    @api.doc(responses={
-        200: 'Liste des urls des photos correspondant à la requête',
-        404: 'Aucune image disponible par rapport à la requête'
-    })
-
+    @api.response(200,'Liste des urls des photos correspondant à la requête')
+    @api.response(500,'Erreur technique du serveur')
     @api.expect(parser)
     @token_required(dao)
     def get(self,query):
