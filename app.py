@@ -25,7 +25,9 @@ api = Api(app,authorizations=authorizations)
 #Instanciation de la couche de données
 #Les paramètres seront passés à l'installation de l'image Docker
 
-dao=dao.dao(sys.argv[2],sys.argv[3],sys.argv[4])
+#L'ensemble des paramètres d'accès à la base de données sont passés dans la commande
+#docker qui lance le serveur
+dao=dao.dao(server=sys.argv[2],username=sys.argv[3],password=sys.argv[4])
 
 #http://localhost:8090/index.html?server=http://localhost&port=5800
 #Mise en place de l'API d'obtention du token sur base d'un couple user/mot de passe_____________________________________
@@ -95,6 +97,8 @@ if __name__ == '__main__':
     #La fonction principale se charge de lancer l'instance Flask en tenant compte
     #des options passées via la commande docker
 
+    #Le passage du port en paramètre permet de choisir celui-ci via la commande docker de lancement
+    #du serveur
     _port=sys.argv[1]
     if "debug" in sys.argv:
         app.run(host="0.0.0.0",port=_port,debug=True)
@@ -107,7 +111,7 @@ if __name__ == '__main__':
 
         else:
             # Le serveur peut être déployé en mode non sécurisé
-            # cela dit la plus part des front-end ne peuvent être hébergés quand mode https
+            # cela dit la plus part des front-end ne peuvent être hébergés qu'en mode https
             # ils ne peuvent donc appeler que des serveurs en https. Il est donc préférable
             # de déployer l'API sur un serveur sécurisé
             app.run(host="0.0.0.0", port=_port, debug=False)

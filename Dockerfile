@@ -3,7 +3,7 @@
 
 #Construction et déploiement du container de l'application x86
 #docker build -t f80hub/picturesearchenginex86 . & docker push f80hub/picturesearchenginex86:latest
-#docker rm -f picturesearchenginex86 && docker pull f80hub/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5800:5800 --name picturesearchenginex86 -d f80hub/picturesearchenginex86:latest 5800 localhost admin admin_password ssl
+#docker rm -f picturesearchenginex86 && docker pull f80hub/picturesearchenginex86:latest && docker run --restart=always -v /root/certs:/app/certs -p 5800:5800 --name picturesearchenginex86 -d f80hub/picturesearchenginex86:latest 5800 server.f80.fr admin <password> ssl
 
 
 FROM jfloff/alpine-python

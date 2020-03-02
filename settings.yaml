@@ -3,6 +3,9 @@ api:
   endpoint: /api
 
 sources:
+  #Il est fortement conseiller d'obtenir vos propres clés d'accès aux API pixabay et unsplash
+  #via les portails développeurs indiqués ci-dessous et de remplacer celles utilisées dans
+  #ce fichier
   pixabay:
     #portail développeur : https://pixabay.com/api/docs/
     key: 5489947-2039fe3621c0de1cbb91d08c6
